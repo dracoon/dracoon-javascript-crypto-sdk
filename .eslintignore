@@ -1,0 +1,10 @@
+.husky
+.idea
+coverage
+dist
+lib
+example
+node_modules
+scripts
+test
+rollup.config.js
