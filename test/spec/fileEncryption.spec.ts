@@ -1,5 +1,5 @@
 import base64 from 'base64-js';
-import { Crypto } from '../../src/Crypto';
+import { Crypto } from '../../src/index';
 import { EncryptedDataContainer } from '../../src/EncryptedDataContainer';
 import { FileEncryptionCipher } from '../../src/FileEncryptionCipher';
 import { PlainDataContainer } from '../../src/PlainDataContainer';
@@ -16,17 +16,23 @@ type Context = {
 };
 
 describe('File Encryption', () => {
+    let testContext: Context;
+
+    beforeEach(() => {
+        testContext = {} as Context;
+    });
+
     describe('with a valid filekey', () => {
-        beforeEach(function (this: Context) {
-            this.plainFileKey = plainFileKey as PlainFileKey;
-            this.fileEncryptionCipher = Crypto.createFileEncryptionCipher(this.plainFileKey);
+        beforeEach(() => {
+            testContext.plainFileKey = plainFileKey as PlainFileKey;
+            testContext.fileEncryptionCipher = Crypto.createFileEncryptionCipher(testContext.plainFileKey);
         });
-        it('should encrypt a string in a single chunk', function (this: Context) {
+        test('should encrypt a string in a single chunk', () => {
             const plainByteArray: Uint8Array = base64.toByteArray(plainFileContentsB64);
             const plainDataContainer: PlainDataContainer = new PlainDataContainer(plainByteArray);
 
-            const encryptedDataContainer1: EncryptedDataContainer = this.fileEncryptionCipher.processBytes(plainDataContainer);
-            const encryptedDataContainer2: EncryptedDataContainer = this.fileEncryptionCipher.doFinal();
+            const encryptedDataContainer1: EncryptedDataContainer = testContext.fileEncryptionCipher.processBytes(plainDataContainer);
+            const encryptedDataContainer2: EncryptedDataContainer = testContext.fileEncryptionCipher.doFinal();
 
             const encryptedByteArray: Uint8Array = new Uint8Array([
                 ...encryptedDataContainer1.getContent(),
@@ -35,20 +41,20 @@ describe('File Encryption', () => {
             const encryptedStringB64: string = base64.fromByteArray(encryptedByteArray);
             const tag: string = encryptedDataContainer2.getTag();
 
-            expect(encryptedStringB64).toEqual(encryptedFileContentsB64);
-            expect(tag).toEqual(this.plainFileKey.tag);
-            expect(base64.byteLength(tag) * 8).toEqual(128);
+            expect(encryptedStringB64).toBe(encryptedFileContentsB64);
+            expect(tag).toBe(testContext.plainFileKey.tag);
+            expect(base64.byteLength(tag) * 8).toBe(128);
         });
-        it('should encrypt a string in multiple chunks', function (this: Context) {
+        test('should encrypt a string in multiple chunks', () => {
             const plainByteArray: Uint8Array = base64.toByteArray(plainFileContentsB64);
             const plainByteArray1: Uint8Array = plainByteArray.slice(0, 22);
             const plainByteArray2: Uint8Array = plainByteArray.slice(22, 44);
             const plainDataContainer1: PlainDataContainer = new PlainDataContainer(plainByteArray1);
             const plainDataContainer2: PlainDataContainer = new PlainDataContainer(plainByteArray2);
 
-            const encryptedDataContainer1: EncryptedDataContainer = this.fileEncryptionCipher.processBytes(plainDataContainer1);
-            const encryptedDataContainer2: EncryptedDataContainer = this.fileEncryptionCipher.processBytes(plainDataContainer2);
-            const encryptedDataContainer3: EncryptedDataContainer = this.fileEncryptionCipher.doFinal();
+            const encryptedDataContainer1: EncryptedDataContainer = testContext.fileEncryptionCipher.processBytes(plainDataContainer1);
+            const encryptedDataContainer2: EncryptedDataContainer = testContext.fileEncryptionCipher.processBytes(plainDataContainer2);
+            const encryptedDataContainer3: EncryptedDataContainer = testContext.fileEncryptionCipher.doFinal();
 
             const encryptedByteArray: Uint8Array = new Uint8Array([
                 ...encryptedDataContainer1.getContent(),
@@ -58,9 +64,9 @@ describe('File Encryption', () => {
             const encryptedStringB64: string = base64.fromByteArray(encryptedByteArray);
             const tag: string = encryptedDataContainer3.getTag();
 
-            expect(encryptedStringB64).toEqual(encryptedFileContentsB64);
-            expect(tag).toEqual(this.plainFileKey.tag);
-            expect(base64.byteLength(tag) * 8).toEqual(128);
+            expect(encryptedStringB64).toBe(encryptedFileContentsB64);
+            expect(tag).toBe(testContext.plainFileKey.tag);
+            expect(base64.byteLength(tag) * 8).toBe(128);
         });
     });
 });

@@ -1,5 +1,5 @@
 import base64 from 'base64-js';
-import { Crypto } from '../../src/Crypto';
+import { Crypto } from '../../src/index';
 import { EncryptedDataContainer } from '../../src/EncryptedDataContainer';
 import { FileDecryptionCipher } from '../../src/FileDecryptionCipher';
 import { FileEncryptionCipher } from '../../src/FileEncryptionCipher';
@@ -32,7 +32,7 @@ const plainFileContentsB64: string = 'VGhpbmdzMQpPdGhlclRoaW5nczEyCk1vcmVUaGluZ3
 describe('Cross Crypto SDK tests (C#)', () => {
     describe('Decryption of private key', () => {
         describe('with version RSA-2048 (A)', () => {
-            it('should return a PlainUserKeyPairContainer in correct format', () => {
+            test('should return a PlainUserKeyPairContainer in correct format', () => {
                 const userKeyPairContainer: UserKeyPairContainer = {
                     privateKeyContainer: privateKey2048 as PrivateKeyContainer,
                     publicKeyContainer: publicKey2048 as PublicKeyContainer
@@ -43,13 +43,13 @@ describe('Cross Crypto SDK tests (C#)', () => {
                     userPassword2048
                 );
 
-                expect(plainUserKeyPairContainer.privateKeyContainer.version).toEqual(UserKeyPairVersion.RSA2048);
+                expect(plainUserKeyPairContainer.privateKeyContainer.version).toBe(UserKeyPairVersion.RSA2048);
                 expect(plainUserKeyPairContainer.privateKeyContainer.privateKey).toContain('-----BEGIN RSA PRIVATE KEY-----');
                 expect(plainUserKeyPairContainer.privateKeyContainer.privateKey).toContain('-----END RSA PRIVATE KEY-----');
             });
         });
         describe('with version RSA-4096', () => {
-            it('should return a PlainUserKeyPairContainer in correct format', () => {
+            test('should return a PlainUserKeyPairContainer in correct format', () => {
                 const userKeyPairContainer: UserKeyPairContainer = {
                     privateKeyContainer: privateKey4096 as PrivateKeyContainer,
                     publicKeyContainer: publicKey4096 as PublicKeyContainer
@@ -60,7 +60,7 @@ describe('Cross Crypto SDK tests (C#)', () => {
                     userPassword4096
                 );
 
-                expect(plainUserKeyPairContainer.privateKeyContainer.version).toEqual(UserKeyPairVersion.RSA4096);
+                expect(plainUserKeyPairContainer.privateKeyContainer.version).toBe(UserKeyPairVersion.RSA4096);
                 expect(plainUserKeyPairContainer.privateKeyContainer.privateKey).toContain('-----BEGIN RSA PRIVATE KEY-----');
                 expect(plainUserKeyPairContainer.privateKeyContainer.privateKey).toContain('-----END RSA PRIVATE KEY-----');
             });
@@ -68,7 +68,7 @@ describe('Cross Crypto SDK tests (C#)', () => {
     });
     describe('Decryption of filekey', () => {
         describe('with version RSA-2048/AES-256-GCM', () => {
-            it('should return a PlainFileKey in correct format', () => {
+            test('should return a PlainFileKey in correct format', () => {
                 const userKeyPairContainer: UserKeyPairContainer = {
                     privateKeyContainer: privateKey2048 as PrivateKeyContainer,
                     publicKeyContainer: publicKey2048 as PublicKeyContainer
@@ -82,13 +82,13 @@ describe('Cross Crypto SDK tests (C#)', () => {
 
                 const decryptedFileKey: PlainFileKey = Crypto.decryptFileKey(encFileKey, plainUserKeyPairContainer.privateKeyContainer);
 
-                expect(decryptedFileKey.key).toEqual(plainFileKey.key);
-                expect(decryptedFileKey.iv).toEqual(plainFileKey.iv);
-                expect(decryptedFileKey.tag).toEqual(plainFileKey.tag);
+                expect(decryptedFileKey.key).toBe(plainFileKey.key);
+                expect(decryptedFileKey.iv).toBe(plainFileKey.iv);
+                expect(decryptedFileKey.tag).toBe(plainFileKey.tag);
             });
         });
         describe('with version RSA-4096/AES-256-GCM', () => {
-            it('should return a PlainFileKey in correct format', () => {
+            test('should return a PlainFileKey in correct format', () => {
                 const userKeyPairContainer: UserKeyPairContainer = {
                     privateKeyContainer: privateKey4096 as PrivateKeyContainer,
                     publicKeyContainer: publicKey4096 as PublicKeyContainer
@@ -102,14 +102,14 @@ describe('Cross Crypto SDK tests (C#)', () => {
 
                 const decryptedFileKey: PlainFileKey = Crypto.decryptFileKey(encFileKey, plainUserKeyPairContainer.privateKeyContainer);
 
-                expect(decryptedFileKey.key).toEqual(plainFileKey.key);
-                expect(decryptedFileKey.iv).toEqual(plainFileKey.iv);
-                expect(decryptedFileKey.tag).toEqual(plainFileKey.tag);
+                expect(decryptedFileKey.key).toBe(plainFileKey.key);
+                expect(decryptedFileKey.iv).toBe(plainFileKey.iv);
+                expect(decryptedFileKey.tag).toBe(plainFileKey.tag);
             });
         });
     });
     describe('Decryption of file contents', () => {
-        it('should work', () => {
+        test('should work', () => {
             const fileKey: PlainFileKey = { ...plainFileKey2048, version: PlainFileKeyVersion.AES256GCM };
             const fileDecryptionCipher: FileDecryptionCipher = Crypto.createFileDecryptionCipher(fileKey);
 
@@ -122,11 +122,11 @@ describe('Cross Crypto SDK tests (C#)', () => {
             const plainByteArray: Uint8Array = new Uint8Array([...plainDataContainer1.getContent(), ...plainDataContainer2.getContent()]);
             const plainStringB64: string = base64.fromByteArray(plainByteArray);
 
-            expect(plainStringB64).toEqual(plainFileContentsB64);
+            expect(plainStringB64).toBe(plainFileContentsB64);
         });
     });
     describe('Encryption of file contents', () => {
-        it('should work', () => {
+        test('should work', () => {
             const fileKey: PlainFileKey = { ...plainFileKey2048, version: PlainFileKeyVersion.AES256GCM };
             const fileEncryptionCipher: FileEncryptionCipher = Crypto.createFileEncryptionCipher(fileKey);
 
@@ -143,8 +143,8 @@ describe('Cross Crypto SDK tests (C#)', () => {
             const encryptedStringB64: string = base64.fromByteArray(encryptedByteArray);
             const tag: string = encryptedDataContainer2.getTag();
 
-            expect(encryptedStringB64).toEqual(encryptedFileContentsB64);
-            expect(tag).toEqual(plainFileKey2048.tag);
+            expect(encryptedStringB64).toBe(encryptedFileContentsB64);
+            expect(tag).toBe(plainFileKey2048.tag);
         });
     });
 });

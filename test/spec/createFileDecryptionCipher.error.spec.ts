@@ -1,4 +1,4 @@
-import { Crypto } from '../../src/Crypto';
+import { Crypto } from '../../src/index';
 import { InvalidArgumentError } from '../../src/error/models/InvalidArgumentError';
 import { InvalidFileKeyError } from '../../src/error/models/InvalidFileKeyError';
 import { PlainFileKey } from '../../src/models/PlainFileKey';
@@ -10,29 +10,20 @@ type Context = {
 };
 
 describe('Function: Crypto.createFileDecryptionCipher', () => {
+    let testContext: Context;
+
+    beforeEach(() => {
+        testContext = {} as Context;
+    });
+
     describe('with invalid filekey', () => {
-        it('should throw an InvalidArgumentError, if filekey is falsy', function (this: Context) {
-            let someError = null;
-
-            try {
-                Crypto.createFileDecryptionCipher(null);
-            } catch (error) {
-                someError = error;
-            }
-
-            expect(someError).toBeInstanceOf(InvalidArgumentError);
+        test('should throw an InvalidArgumentError, if filekey is falsy', () => {
+            expect(() => Crypto.createFileDecryptionCipher(null)).toThrow(InvalidArgumentError);
         });
-        it('should throw an InvalidFileKeyError, if version of filekey is not supported', function (this: Context) {
-            this.plainFileKey = plainFileKeyBadVersion as PlainFileKey;
-            let someError = null;
+        test('should throw an InvalidFileKeyError, if version of filekey is not supported', () => {
+            testContext.plainFileKey = plainFileKeyBadVersion as PlainFileKey;
 
-            try {
-                Crypto.createFileDecryptionCipher(this.plainFileKey);
-            } catch (error) {
-                someError = error;
-            }
-
-            expect(someError).toBeInstanceOf(InvalidFileKeyError);
+            expect(() => Crypto.createFileDecryptionCipher(testContext.plainFileKey)).toThrow(InvalidFileKeyError);
         });
     });
 });

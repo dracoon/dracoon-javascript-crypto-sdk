@@ -1,4 +1,4 @@
-import { Crypto } from '../../src/Crypto';
+import { Crypto } from '../../src/index';
 import { EncryptionError } from '../../src/error/models/EncryptionError';
 import { InvalidArgumentError } from '../../src/error/models/InvalidArgumentError';
 import { InvalidKeyPairError } from '../../src/error/models/InvalidKeyPairError';
@@ -25,110 +25,68 @@ type Context = {
 };
 
 describe('Function: Crypto.encryptPrivateKey', () => {
+    let testContext: Context;
+
+    beforeEach(() => {
+        testContext = {} as Context;
+    });
+
     describe('with invalid keypair', () => {
-        beforeEach(function (this: Context) {
-            this.password = 'Qwer1234!';
+        beforeEach(() => {
+            testContext.password = 'Qwer1234!';
         });
-        it('should throw an InvalidArgumentError, if keypair is falsy', function (this: Context) {
-            let someError = null;
-
-            try {
-                Crypto.encryptPrivateKey(null, this.password);
-            } catch (error) {
-                someError = error;
-            }
-
-            expect(someError).toBeInstanceOf(InvalidArgumentError);
+        test('should throw an InvalidArgumentError, if keypair is falsy', () => {
+            expect(() => Crypto.encryptPrivateKey(null, testContext.password)).toThrow(InvalidArgumentError);
         });
-        it('should throw an InvalidKeyPairError, if versions of keys dont match', function (this: Context) {
-            this.plainUserKeyPairContainer = {
+        test('should throw an InvalidKeyPairError, if versions of keys dont match', () => {
+            testContext.plainUserKeyPairContainer = {
                 privateKeyContainer: plainPrivateKey2048 as PrivateKeyContainer,
                 publicKeyContainer: publicKey4096 as PublicKeyContainer
             };
-            let someError = null;
 
-            try {
-                Crypto.encryptPrivateKey(this.plainUserKeyPairContainer, this.password);
-            } catch (error) {
-                someError = error;
-            }
-
-            expect(someError).toBeInstanceOf(InvalidKeyPairError);
+            expect(() => Crypto.encryptPrivateKey(testContext.plainUserKeyPairContainer, testContext.password)).toThrow(
+                InvalidKeyPairError
+            );
         });
-        it('should throw an InvalidKeyPairError, if version is not supported', function (this: Context) {
-            this.plainUserKeyPairContainer = {
+        test('should throw an InvalidKeyPairError, if version is not supported', () => {
+            testContext.plainUserKeyPairContainer = {
                 privateKeyContainer: plainPrivateKeyBadVersion as PrivateKeyContainer,
                 publicKeyContainer: publicKeyBadVersion as PublicKeyContainer
             };
-            let someError = null;
 
-            try {
-                Crypto.encryptPrivateKey(this.plainUserKeyPairContainer, this.password);
-            } catch (error) {
-                someError = error;
-            }
-
-            expect(someError).toBeInstanceOf(InvalidKeyPairError);
+            expect(() => Crypto.encryptPrivateKey(testContext.plainUserKeyPairContainer, testContext.password)).toThrow(
+                InvalidKeyPairError
+            );
         });
-        it('should throw an EncryptionError, if keys are not in valid PEM format', function (this: Context) {
-            this.plainUserKeyPairContainer = {
+        test('should throw an EncryptionError, if keys are not in valid PEM format', () => {
+            testContext.plainUserKeyPairContainer = {
                 privateKeyContainer: plainPrivateKeyBadPem as PrivateKeyContainer,
                 publicKeyContainer: publicKeyBadPem as PublicKeyContainer
             };
-            let someError = null;
 
-            try {
-                Crypto.encryptPrivateKey(this.plainUserKeyPairContainer, this.password);
-            } catch (error) {
-                someError = error;
-            }
-
-            expect(someError).toBeInstanceOf(EncryptionError);
+            expect(() => Crypto.encryptPrivateKey(testContext.plainUserKeyPairContainer, testContext.password)).toThrow(EncryptionError);
         });
-        it('should throw an EncryptionError, if keys are not in valid ASN.1 format', function (this: Context) {
-            this.plainUserKeyPairContainer = {
+        test('should throw an EncryptionError, if keys are not in valid ASN.1 format', () => {
+            testContext.plainUserKeyPairContainer = {
                 privateKeyContainer: plainPrivateKeyBadAsn1 as PrivateKeyContainer,
                 publicKeyContainer: publicKeyBadAsn1 as PublicKeyContainer
             };
-            let someError = null;
 
-            try {
-                Crypto.encryptPrivateKey(this.plainUserKeyPairContainer, this.password);
-            } catch (error) {
-                someError = error;
-            }
-
-            expect(someError).toBeInstanceOf(EncryptionError);
+            expect(() => Crypto.encryptPrivateKey(testContext.plainUserKeyPairContainer, testContext.password)).toThrow(EncryptionError);
         });
     });
     describe('with invalid password', () => {
-        beforeEach(function (this: Context) {
-            this.plainUserKeyPairContainer = {
+        beforeEach(() => {
+            testContext.plainUserKeyPairContainer = {
                 privateKeyContainer: plainPrivateKey2048 as PrivateKeyContainer,
                 publicKeyContainer: publicKey2048 as PublicKeyContainer
             };
         });
-        it('should throw an InvalidArgumentError, if password is falsy', function (this: Context) {
-            let someError = null;
-
-            try {
-                Crypto.encryptPrivateKey(this.plainUserKeyPairContainer, null);
-            } catch (error) {
-                someError = error;
-            }
-
-            expect(someError).toBeInstanceOf(InvalidArgumentError);
+        test('should throw an InvalidArgumentError, if password is falsy', () => {
+            expect(() => Crypto.encryptPrivateKey(testContext.plainUserKeyPairContainer, null)).toThrow(InvalidArgumentError);
         });
-        it('should throw an InvalidArgumentError, if password is empty string', function (this: Context) {
-            let someError = null;
-
-            try {
-                Crypto.decryptPrivateKey(this.plainUserKeyPairContainer, '');
-            } catch (error) {
-                someError = error;
-            }
-
-            expect(someError).toBeInstanceOf(InvalidArgumentError);
+        test('should throw an InvalidArgumentError, if password is empty string', () => {
+            expect(() => Crypto.decryptPrivateKey(testContext.plainUserKeyPairContainer, '')).toThrow(InvalidArgumentError);
         });
     });
 });

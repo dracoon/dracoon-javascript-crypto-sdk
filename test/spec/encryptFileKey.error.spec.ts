@@ -1,4 +1,4 @@
-import { Crypto } from '../../src/Crypto';
+import { Crypto } from '../../src/index';
 import { EncryptionError } from '../../src/error/models/EncryptionError';
 import { InvalidArgumentError } from '../../src/error/models/InvalidArgumentError';
 import { InvalidFileKeyError } from '../../src/error/models/InvalidFileKeyError';
@@ -22,84 +22,46 @@ type Context = {
 };
 
 describe('Function: Crypto.encryptFileKey', () => {
+    let testContext: Context;
+
+    beforeEach(() => {
+        testContext = {} as Context;
+    });
+
     describe('with invalid filekey', () => {
-        beforeEach(function (this: Context) {
-            this.publicKeyContainer = publicKey2048 as PublicKeyContainer;
+        beforeEach(() => {
+            testContext.publicKeyContainer = publicKey2048 as PublicKeyContainer;
         });
-        it('should throw an InvalidArgumentError, if filekey is falsy', function (this: Context) {
-            let someError = null;
-
-            try {
-                Crypto.encryptFileKey(null, this.publicKeyContainer);
-            } catch (error) {
-                someError = error;
-            }
-
-            expect(someError).toBeInstanceOf(InvalidArgumentError);
+        test('should throw an InvalidArgumentError, if filekey is falsy', () => {
+            expect(() => Crypto.encryptFileKey(null, testContext.publicKeyContainer)).toThrow(InvalidArgumentError);
         });
-        it('should throw an InvalidFileKeyError, if version of filekey is not supported', function (this: Context) {
-            this.plainFileKey = plainFileKeyBadVersion as PlainFileKey;
-            let someError = null;
+        test('should throw an InvalidFileKeyError, if version of filekey is not supported', () => {
+            testContext.plainFileKey = plainFileKeyBadVersion as PlainFileKey;
 
-            try {
-                Crypto.encryptFileKey(this.plainFileKey, this.publicKeyContainer);
-            } catch (error) {
-                someError = error;
-            }
-
-            expect(someError).toBeInstanceOf(InvalidFileKeyError);
+            expect(() => Crypto.encryptFileKey(testContext.plainFileKey, testContext.publicKeyContainer)).toThrow(InvalidFileKeyError);
         });
     });
     describe('with invalid public key', () => {
-        beforeEach(function (this: Context) {
-            this.plainFileKey = plainFileKey2048 as PlainFileKey;
+        beforeEach(() => {
+            testContext.plainFileKey = plainFileKey2048 as PlainFileKey;
         });
-        it('should throw an InvalidArgumentError, if public key is falsy', function (this: Context) {
-            let someError = null;
-
-            try {
-                Crypto.encryptFileKey(this.plainFileKey, null);
-            } catch (error) {
-                someError = error;
-            }
-
-            expect(someError).toBeInstanceOf(InvalidArgumentError);
+        test('should throw an InvalidArgumentError, if public key is falsy', () => {
+            expect(() => Crypto.encryptFileKey(testContext.plainFileKey, null)).toThrow(InvalidArgumentError);
         });
-        it('should throw an InvalidKeyPairError, if version of public key is not supported', function (this: Context) {
-            this.publicKeyContainer = publicKeyBadVersion as PublicKeyContainer;
-            let someError = null;
+        test('should throw an InvalidKeyPairError, if version of public key is not supported', () => {
+            testContext.publicKeyContainer = publicKeyBadVersion as PublicKeyContainer;
 
-            try {
-                Crypto.encryptFileKey(this.plainFileKey, this.publicKeyContainer);
-            } catch (error) {
-                someError = error;
-            }
-
-            expect(someError).toBeInstanceOf(InvalidKeyPairError);
+            expect(() => Crypto.encryptFileKey(testContext.plainFileKey, testContext.publicKeyContainer)).toThrow(InvalidKeyPairError);
         });
-        it('should throw an EncryptionError, if public key is not in valid PEM format', function (this: Context) {
-            this.publicKeyContainer = publicKeyBadPem as PublicKeyContainer;
-            let someError = null;
+        test('should throw an EncryptionError, if public key is not in valid PEM format', () => {
+            testContext.publicKeyContainer = publicKeyBadPem as PublicKeyContainer;
 
-            try {
-                Crypto.encryptFileKey(this.plainFileKey, this.publicKeyContainer);
-            } catch (error) {
-                someError = error;
-            }
-
-            expect(someError).toBeInstanceOf(EncryptionError);
+            expect(() => Crypto.encryptFileKey(testContext.plainFileKey, testContext.publicKeyContainer)).toThrow(EncryptionError);
         });
-        it('should throw an EncryptionError, if public key is not in valid ASN.1 format', function (this: Context) {
-            this.publicKeyContainer = publicKeyBadAsn1 as PublicKeyContainer;
-            let someError = null;
+        test('should throw an EncryptionError, if public key is not in valid ASN.1 format', () => {
+            testContext.publicKeyContainer = publicKeyBadAsn1 as PublicKeyContainer;
 
-            try {
-                Crypto.encryptFileKey(this.plainFileKey, this.publicKeyContainer);
-            } catch (error) {
-                someError = error;
-            }
-
-            expect(someError).toBeInstanceOf(EncryptionError);
+            expect(() => Crypto.encryptFileKey(testContext.plainFileKey, testContext.publicKeyContainer)).toThrow(EncryptionError);
         });
     });
 });
