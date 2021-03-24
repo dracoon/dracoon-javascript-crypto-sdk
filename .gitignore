@@ -1,5 +1,6 @@
 .idea
 coverage
+dependency-check*
 dist
 lib
 node_modules
