@@ -1,3 +1,6 @@
+[![CI](https://travis-ci.com/dracoon/dracoon-javascript-crypto-sdk.svg?branch=master)](https://travis-ci.com/dracoon)
+[![Node version](https://img.shields.io/npm/v/@dracoon-official/crypto-sdk)](https://npmjs.com/package/@dracoon-official/crypto-sdk)
+
 # Dracoon JavaScript Crypto SDK
 
 A library which implements the client-side encryption of Dracoon.
