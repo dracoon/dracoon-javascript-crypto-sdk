@@ -8,6 +8,21 @@ A document which describes the client-side encryption in detail can be found her
 
 https://support.dracoon.com/hc/en-us/articles/360000986345
 
+# System Requirements
+
+The following Browser versions are officially supported:
+
+-   Chrome v89+
+-   Edge v89+
+-   Firefox v87+
+-   Safari v14+
+
+The following Node versions are officially supported:
+
+-   Node v14+
+
+Older Browser/Node versions might still work, but have not been tested.
+
 # Setup
 
 #### Download & Installation
