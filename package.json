@@ -6,7 +6,6 @@
     "author": "DRACOON",
     "main": "lib/bundle.js",
     "types": "lib/index.d.ts",
-    "type": "module",
     "files": [
         "lib/"
     ],

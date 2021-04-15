@@ -7,7 +7,7 @@ export default [
         input: 'src/index.ts',
         output: {
             file: 'lib/bundle.js',
-            format: 'esm'
+            format: 'cjs'
         },
         external: ['node-forge'],
         plugins: [typescript()]
