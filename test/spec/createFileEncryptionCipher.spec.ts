@@ -1,4 +1,4 @@
-import { Crypto } from '../../src/Crypto';
+import { Crypto } from '../../src/index';
 import { FileEncryptionCipher } from '../../src/FileEncryptionCipher';
 import { PlainFileKey } from '../../src/models/PlainFileKey';
 
@@ -9,12 +9,18 @@ type Context = {
 };
 
 describe('Function: Crypto.createFileEncryptionCipher', () => {
+    let testContext: Context;
+
+    beforeEach(() => {
+        testContext = {} as Context;
+    });
+
     describe('with filekey version AES-256-GCM', () => {
-        beforeEach(function (this: Context) {
-            this.plainFileKey = plainFileKey as PlainFileKey;
+        beforeEach(() => {
+            testContext.plainFileKey = plainFileKey as PlainFileKey;
         });
-        it('should return a new FileEncryptionCipher', function (this: Context) {
-            const fileEncryptionCipher: FileEncryptionCipher = Crypto.createFileEncryptionCipher(this.plainFileKey);
+        test('should return a new FileEncryptionCipher', () => {
+            const fileEncryptionCipher: FileEncryptionCipher = Crypto.createFileEncryptionCipher(testContext.plainFileKey);
 
             expect(fileEncryptionCipher).toBeInstanceOf(FileEncryptionCipher);
         });

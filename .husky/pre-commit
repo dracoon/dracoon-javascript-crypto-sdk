@@ -3,4 +3,4 @@
 
 npm run prettier:check
 npm run eslint:check
-npm run test:node
+npm run test

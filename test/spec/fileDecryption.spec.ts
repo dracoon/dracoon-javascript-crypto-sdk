@@ -1,5 +1,5 @@
 import base64 from 'base64-js';
-import { Crypto } from '../../src/Crypto';
+import { Crypto } from '../../src/index';
 import { EncryptedDataContainer } from '../../src/EncryptedDataContainer';
 import { PlainDataContainer } from '../../src/PlainDataContainer';
 import { FileDecryptionCipher } from '../../src/FileDecryptionCipher';
@@ -20,33 +20,39 @@ type Context = {
 };
 
 describe('File Decryption', () => {
+    let testContext: Context;
+
+    beforeEach(() => {
+        testContext = {} as Context;
+    });
+
     describe('with a valid filekey', () => {
-        beforeEach(function (this: Context) {
-            this.plainFileKey = plainFileKey as PlainFileKey;
-            this.fileDecryptionCipher = Crypto.createFileDecryptionCipher(this.plainFileKey);
+        beforeEach(() => {
+            testContext.plainFileKey = plainFileKey as PlainFileKey;
+            testContext.fileDecryptionCipher = Crypto.createFileDecryptionCipher(testContext.plainFileKey);
         });
-        it('should decrypt a string in a single chunk', function (this: Context) {
+        test('should decrypt a string in a single chunk', async () => {
             const encryptedByteArray: Uint8Array = base64.toByteArray(encryptedFileContentsB64);
             const encryptedDataContainer: EncryptedDataContainer = new EncryptedDataContainer(encryptedByteArray);
 
-            const plainDataContainer1: PlainDataContainer = this.fileDecryptionCipher.processBytes(encryptedDataContainer);
-            const plainDataContainer2: PlainDataContainer = this.fileDecryptionCipher.doFinal();
+            const plainDataContainer1: PlainDataContainer = testContext.fileDecryptionCipher.processBytes(encryptedDataContainer);
+            const plainDataContainer2: PlainDataContainer = testContext.fileDecryptionCipher.doFinal();
 
             const plainByteArray: Uint8Array = new Uint8Array([...plainDataContainer1.getContent(), ...plainDataContainer2.getContent()]);
             const plainStringB64: string = base64.fromByteArray(plainByteArray);
 
-            expect(plainStringB64).toEqual(plainFileContentsB64);
+            expect(plainStringB64).toBe(plainFileContentsB64);
         });
-        it('should decrypt a string in multiple chunks', function (this: Context) {
+        test('should decrypt a string in multiple chunks', () => {
             const encryptedByteArray: Uint8Array = base64.toByteArray(encryptedFileContentsB64);
             const encryptedByteArray1: Uint8Array = encryptedByteArray.slice(0, 22);
             const encryptedByteArray2: Uint8Array = encryptedByteArray.slice(22, 44);
             const encryptedDataContainer1: EncryptedDataContainer = new EncryptedDataContainer(encryptedByteArray1);
             const encryptedDataContainer2: EncryptedDataContainer = new EncryptedDataContainer(encryptedByteArray2);
 
-            const plainDataContainer1: PlainDataContainer = this.fileDecryptionCipher.processBytes(encryptedDataContainer1);
-            const plainDataContainer2: PlainDataContainer = this.fileDecryptionCipher.processBytes(encryptedDataContainer2);
-            const plainDataContainer3: PlainDataContainer = this.fileDecryptionCipher.doFinal();
+            const plainDataContainer1: PlainDataContainer = testContext.fileDecryptionCipher.processBytes(encryptedDataContainer1);
+            const plainDataContainer2: PlainDataContainer = testContext.fileDecryptionCipher.processBytes(encryptedDataContainer2);
+            const plainDataContainer3: PlainDataContainer = testContext.fileDecryptionCipher.doFinal();
 
             const plainByteArray: Uint8Array = new Uint8Array([
                 ...plainDataContainer1.getContent(),
@@ -55,55 +61,55 @@ describe('File Decryption', () => {
             ]);
             const plainStringB64: string = base64.fromByteArray(plainByteArray);
 
-            expect(plainStringB64).toEqual(plainFileContentsB64);
+            expect(plainStringB64).toBe(plainFileContentsB64);
         });
     });
     describe('with an invalid filekey', () => {
-        it('should throw a DecryptionError, if filekey has a modified tag', function (this: Context) {
-            this.plainFileKey = plainFileKeyBadTag as PlainFileKey;
-            this.fileDecryptionCipher = Crypto.createFileDecryptionCipher(this.plainFileKey);
+        test('should throw a DecryptionError, if filekey has a modified tag', () => {
+            testContext.plainFileKey = plainFileKeyBadTag as PlainFileKey;
+            testContext.fileDecryptionCipher = Crypto.createFileDecryptionCipher(testContext.plainFileKey);
             let someError = null;
 
             try {
                 const encryptedByteArray: Uint8Array = base64.toByteArray(encryptedFileContentsB64);
                 const encryptedDataContainer: EncryptedDataContainer = new EncryptedDataContainer(encryptedByteArray);
 
-                this.fileDecryptionCipher.processBytes(encryptedDataContainer);
-                this.fileDecryptionCipher.doFinal();
+                testContext.fileDecryptionCipher.processBytes(encryptedDataContainer);
+                testContext.fileDecryptionCipher.doFinal();
             } catch (error) {
                 someError = error;
             }
 
             expect(someError).toBeInstanceOf(DecryptionError);
         });
-        it('should throw a DecryptionError, if filekey has a modified key', function (this: Context) {
-            this.plainFileKey = plainFileKeyBadKey as PlainFileKey;
-            this.fileDecryptionCipher = Crypto.createFileDecryptionCipher(this.plainFileKey);
+        test('should throw a DecryptionError, if filekey has a modified key', () => {
+            testContext.plainFileKey = plainFileKeyBadKey as PlainFileKey;
+            testContext.fileDecryptionCipher = Crypto.createFileDecryptionCipher(testContext.plainFileKey);
             let someError = null;
 
             try {
                 const encryptedByteArray: Uint8Array = base64.toByteArray(encryptedFileContentsB64);
                 const encryptedDataContainer: EncryptedDataContainer = new EncryptedDataContainer(encryptedByteArray);
 
-                this.fileDecryptionCipher.processBytes(encryptedDataContainer);
-                this.fileDecryptionCipher.doFinal();
+                testContext.fileDecryptionCipher.processBytes(encryptedDataContainer);
+                testContext.fileDecryptionCipher.doFinal();
             } catch (error) {
                 someError = error;
             }
 
             expect(someError).toBeInstanceOf(DecryptionError);
         });
-        it('should throw a DecryptionError, if filekey has a modified iv', function (this: Context) {
-            this.plainFileKey = plainFileKeyBadIv as PlainFileKey;
-            this.fileDecryptionCipher = Crypto.createFileDecryptionCipher(this.plainFileKey);
+        test('should throw a DecryptionError, if filekey has a modified iv', () => {
+            testContext.plainFileKey = plainFileKeyBadIv as PlainFileKey;
+            testContext.fileDecryptionCipher = Crypto.createFileDecryptionCipher(testContext.plainFileKey);
             let someError = null;
 
             try {
                 const encryptedByteArray: Uint8Array = base64.toByteArray(encryptedFileContentsB64);
                 const encryptedDataContainer: EncryptedDataContainer = new EncryptedDataContainer(encryptedByteArray);
 
-                this.fileDecryptionCipher.processBytes(encryptedDataContainer);
-                this.fileDecryptionCipher.doFinal();
+                testContext.fileDecryptionCipher.processBytes(encryptedDataContainer);
+                testContext.fileDecryptionCipher.doFinal();
             } catch (error) {
                 someError = error;
             }

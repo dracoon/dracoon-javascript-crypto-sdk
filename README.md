@@ -1,3 +1,6 @@
+[![CI](https://travis-ci.com/dracoon/dracoon-javascript-crypto-sdk.svg?branch=master)](https://travis-ci.com/dracoon)
+[![Node version](https://img.shields.io/npm/v/@dracoon-official/crypto-sdk)](https://npmjs.com/package/@dracoon-official/crypto-sdk)
+
 # Dracoon JavaScript Crypto SDK
 
 A library which implements the client-side encryption of Dracoon.
@@ -7,6 +10,21 @@ A library which implements the client-side encryption of Dracoon.
 A document which describes the client-side encryption in detail can be found here:
 
 https://support.dracoon.com/hc/en-us/articles/360000986345
+
+# System Requirements
+
+The following Browser versions are officially supported:
+
+-   Chrome v89+
+-   Edge v89+
+-   Firefox v87+
+-   Safari v14+
+
+The following Node versions are officially supported:
+
+-   Node v14+
+
+Older Browser/Node versions might still work, but have not been tested.
 
 # Setup
 

@@ -1,5 +1,5 @@
 import base64 from 'base64-js';
-import { Crypto } from '../../src/Crypto';
+import { Crypto } from '../../src/index';
 import { FileKeyVersion } from '../../src/enums/FileKeyVersion';
 import { FileKey } from '../../src/models/FileKey';
 import { PlainFileKey } from '../../src/models/PlainFileKey';
@@ -17,78 +17,84 @@ type Context = {
 };
 
 describe('Function: Crypto.encryptFileKey', () => {
+    let testContext: Context;
+
+    beforeEach(() => {
+        testContext = {} as Context;
+    });
+
     describe('when encrypting with keypair version RSA-2048 (A)', () => {
-        beforeEach(function (this: Context) {
-            this.plainFileKey = plainFileKey2048 as PlainFileKey;
-            this.publicKeyContainer = publicKey2048 as PublicKeyContainer;
+        beforeEach(() => {
+            testContext.plainFileKey = plainFileKey2048 as PlainFileKey;
+            testContext.publicKeyContainer = publicKey2048 as PublicKeyContainer;
         });
-        it('should return a FileKey with the correct properties', function (this: Context) {
-            const fileKey: FileKey = Crypto.encryptFileKey(this.plainFileKey, this.publicKeyContainer);
+        test('should return a FileKey with the correct properties', () => {
+            const fileKey: FileKey = Crypto.encryptFileKey(testContext.plainFileKey, testContext.publicKeyContainer);
 
             expect(Object.keys(fileKey)).toContain('version');
             expect(Object.keys(fileKey)).toContain('key');
             expect(Object.keys(fileKey)).toContain('iv');
             expect(Object.keys(fileKey)).toContain('tag');
         });
-        it('should return a FileKey with the correct crypto version', function (this: Context) {
-            const fileKey: FileKey = Crypto.encryptFileKey(this.plainFileKey, this.publicKeyContainer);
+        test('should return a FileKey with the correct crypto version', () => {
+            const fileKey: FileKey = Crypto.encryptFileKey(testContext.plainFileKey, testContext.publicKeyContainer);
 
-            expect(fileKey.version).toEqual(FileKeyVersion.RSA2048_AES256GCM);
+            expect(fileKey.version).toBe(FileKeyVersion.RSA2048_AES256GCM);
         });
-        it('should return a FileKey with a 2048 bit key base64 encoded', function (this: Context) {
-            const fileKey: FileKey = Crypto.encryptFileKey(this.plainFileKey, this.publicKeyContainer);
+        test('should return a FileKey with a 2048 bit key base64 encoded', () => {
+            const fileKey: FileKey = Crypto.encryptFileKey(testContext.plainFileKey, testContext.publicKeyContainer);
             const bitLength: number = base64.byteLength(fileKey.key) * 8;
 
-            expect(bitLength).toEqual(2048);
+            expect(bitLength).toBe(2048);
         });
-        it('should return a FileKey with a 96 bit iv base64 encoded', function (this: Context) {
-            const fileKey: FileKey = Crypto.encryptFileKey(this.plainFileKey, this.publicKeyContainer);
+        test('should return a FileKey with a 96 bit iv base64 encoded', () => {
+            const fileKey: FileKey = Crypto.encryptFileKey(testContext.plainFileKey, testContext.publicKeyContainer);
             const bitLength: number = base64.byteLength(fileKey.iv) * 8;
 
-            expect(bitLength).toEqual(96);
+            expect(bitLength).toBe(96);
         });
-        it('should return a FileKey with a 128 bit tag base64 encoded', function (this: Context) {
-            const fileKey: FileKey = Crypto.encryptFileKey(this.plainFileKey, this.publicKeyContainer);
+        test('should return a FileKey with a 128 bit tag base64 encoded', () => {
+            const fileKey: FileKey = Crypto.encryptFileKey(testContext.plainFileKey, testContext.publicKeyContainer);
             const bitLength: number = base64.byteLength(fileKey.tag) * 8;
 
-            expect(bitLength).toEqual(128);
+            expect(bitLength).toBe(128);
         });
     });
     describe('when encrypting with keypair version RSA-4096', () => {
-        beforeEach(function (this: Context) {
-            this.plainFileKey = plainFileKey4096 as PlainFileKey;
-            this.publicKeyContainer = publicKey4096 as PublicKeyContainer;
+        beforeEach(() => {
+            testContext.plainFileKey = plainFileKey4096 as PlainFileKey;
+            testContext.publicKeyContainer = publicKey4096 as PublicKeyContainer;
         });
-        it('should return a FileKey with the correct properties', function (this: Context) {
-            const fileKey: FileKey = Crypto.encryptFileKey(this.plainFileKey, this.publicKeyContainer);
+        test('should return a FileKey with the correct properties', () => {
+            const fileKey: FileKey = Crypto.encryptFileKey(testContext.plainFileKey, testContext.publicKeyContainer);
 
             expect(Object.keys(fileKey)).toContain('version');
             expect(Object.keys(fileKey)).toContain('key');
             expect(Object.keys(fileKey)).toContain('iv');
             expect(Object.keys(fileKey)).toContain('tag');
         });
-        it('should return a FileKey with the correct crypto version', function (this: Context) {
-            const fileKey: FileKey = Crypto.encryptFileKey(this.plainFileKey, this.publicKeyContainer);
+        test('should return a FileKey with the correct crypto version', () => {
+            const fileKey: FileKey = Crypto.encryptFileKey(testContext.plainFileKey, testContext.publicKeyContainer);
 
-            expect(fileKey.version).toEqual(FileKeyVersion.RSA4096_AES256GCM);
+            expect(fileKey.version).toBe(FileKeyVersion.RSA4096_AES256GCM);
         });
-        it('should return a FileKey with a 4096 bit key base64 encoded', function (this: Context) {
-            const fileKey: FileKey = Crypto.encryptFileKey(this.plainFileKey, this.publicKeyContainer);
+        test('should return a FileKey with a 4096 bit key base64 encoded', () => {
+            const fileKey: FileKey = Crypto.encryptFileKey(testContext.plainFileKey, testContext.publicKeyContainer);
             const bitLength: number = base64.byteLength(fileKey.key) * 8;
 
-            expect(bitLength).toEqual(4096);
+            expect(bitLength).toBe(4096);
         });
-        it('should return a FileKey with a 96 bit iv base64 encoded', function (this: Context) {
-            const fileKey: FileKey = Crypto.encryptFileKey(this.plainFileKey, this.publicKeyContainer);
+        test('should return a FileKey with a 96 bit iv base64 encoded', () => {
+            const fileKey: FileKey = Crypto.encryptFileKey(testContext.plainFileKey, testContext.publicKeyContainer);
             const bitLength: number = base64.byteLength(fileKey.iv) * 8;
 
-            expect(bitLength).toEqual(96);
+            expect(bitLength).toBe(96);
         });
-        it('should return a FileKey with a 128 bit tag base64 encoded', function (this: Context) {
-            const fileKey: FileKey = Crypto.encryptFileKey(this.plainFileKey, this.publicKeyContainer);
+        test('should return a FileKey with a 128 bit tag base64 encoded', () => {
+            const fileKey: FileKey = Crypto.encryptFileKey(testContext.plainFileKey, testContext.publicKeyContainer);
             const bitLength: number = base64.byteLength(fileKey.tag) * 8;
 
-            expect(bitLength).toEqual(128);
+            expect(bitLength).toBe(128);
         });
     });
 });

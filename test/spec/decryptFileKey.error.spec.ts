@@ -1,4 +1,4 @@
-import { Crypto } from '../../src/Crypto';
+import { Crypto } from '../../src/index';
 import { DecryptionError } from '../../src/error/models/DecryptionError';
 import { InvalidArgumentError } from '../../src/error/models/InvalidArgumentError';
 import { InvalidFileKeyError } from '../../src/error/models/InvalidFileKeyError';
@@ -26,124 +26,65 @@ type Context = {
 };
 
 describe('Function: Crypto.decryptFileKey', () => {
+    let testContext: Context;
+
+    beforeEach(() => {
+        testContext = {} as Context;
+    });
+
     describe('with invalid filekey', () => {
-        beforeEach(function (this: Context) {
-            this.privateKeyContainer = plainPrivateKey2048 as PrivateKeyContainer;
+        beforeEach(() => {
+            testContext.privateKeyContainer = plainPrivateKey2048 as PrivateKeyContainer;
         });
-        it('should throw an InvalidArgumentError, if filekey is falsy', function (this: Context) {
-            let someError = null;
-
-            try {
-                Crypto.decryptFileKey(null, this.privateKeyContainer);
-            } catch (error) {
-                someError = error;
-            }
-
-            expect(someError).toBeInstanceOf(InvalidArgumentError);
+        test('should throw an InvalidArgumentError, if filekey is falsy', () => {
+            expect(() => Crypto.decryptFileKey(null, testContext.privateKeyContainer)).toThrow(InvalidArgumentError);
         });
-        it('should throw an InvalidFileKeyError, if version of filekey is not supported', function (this: Context) {
-            this.fileKey = encFileKeyBadVersion as FileKey;
-            let someError = null;
+        test('should throw an InvalidFileKeyError, if version of filekey is not supported', () => {
+            testContext.fileKey = encFileKeyBadVersion as FileKey;
 
-            try {
-                Crypto.decryptFileKey(this.fileKey, this.privateKeyContainer);
-            } catch (error) {
-                someError = error;
-            }
-
-            expect(someError).toBeInstanceOf(InvalidFileKeyError);
+            expect(() => Crypto.decryptFileKey(testContext.fileKey, testContext.privateKeyContainer)).toThrow(InvalidFileKeyError);
         });
-        it('should throw a DecryptionError, if filekey has been modified', function (this: Context) {
-            this.fileKey = encFileKeyBadKey as FileKey;
-            let someError = null;
+        test('should throw a DecryptionError, if filekey has been modified', () => {
+            testContext.fileKey = encFileKeyBadKey as FileKey;
 
-            try {
-                Crypto.decryptFileKey(this.fileKey, this.privateKeyContainer);
-            } catch (error) {
-                someError = error;
-            }
-
-            expect(someError).toBeInstanceOf(DecryptionError);
+            expect(() => Crypto.decryptFileKey(testContext.fileKey, testContext.privateKeyContainer)).toThrow(DecryptionError);
         });
     });
     describe('with invalid private key', () => {
-        beforeEach(function (this: Context) {
-            this.fileKey = encFileKey2048 as FileKey;
+        beforeEach(() => {
+            testContext.fileKey = encFileKey2048 as FileKey;
         });
-        it('should throw an InvalidArgumentError, if private key is falsy', function (this: Context) {
-            let someError = null;
-
-            try {
-                Crypto.decryptFileKey(this.fileKey, null);
-            } catch (error) {
-                someError = error;
-            }
-
-            expect(someError).toBeInstanceOf(InvalidArgumentError);
+        test('should throw an InvalidArgumentError, if private key is falsy', () => {
+            expect(() => Crypto.decryptFileKey(testContext.fileKey, null)).toThrow(InvalidArgumentError);
         });
-        it('should throw an InvalidKeyPairError, if version of private key is not supported', function (this: Context) {
-            this.privateKeyContainer = plainPrivateKeyBadVersion as PrivateKeyContainer;
-            let someError = null;
+        test('should throw an InvalidKeyPairError, if version of private key is not supported', () => {
+            testContext.privateKeyContainer = plainPrivateKeyBadVersion as PrivateKeyContainer;
 
-            try {
-                Crypto.decryptFileKey(this.fileKey, this.privateKeyContainer);
-            } catch (error) {
-                someError = error;
-            }
-
-            expect(someError).toBeInstanceOf(InvalidKeyPairError);
+            expect(() => Crypto.decryptFileKey(testContext.fileKey, testContext.privateKeyContainer)).toThrow(InvalidKeyPairError);
         });
-        it('should throw a DecryptionError, if private key is not in valid PEM format', function (this: Context) {
-            this.privateKeyContainer = plainPrivateKeyBadPem as PrivateKeyContainer;
-            let someError = null;
+        test('should throw a DecryptionError, if private key is not in valid PEM format', () => {
+            testContext.privateKeyContainer = plainPrivateKeyBadPem as PrivateKeyContainer;
 
-            try {
-                Crypto.decryptFileKey(this.fileKey, this.privateKeyContainer);
-            } catch (error) {
-                someError = error;
-            }
-
-            expect(someError).toBeInstanceOf(DecryptionError);
+            expect(() => Crypto.decryptFileKey(testContext.fileKey, testContext.privateKeyContainer)).toThrow(DecryptionError);
         });
-        it('should throw a DecryptionError, if private key is not in valid ASN.1 format', function (this: Context) {
-            this.privateKeyContainer = plainPrivateKeyBadAsn1 as PrivateKeyContainer;
-            let someError = null;
+        test('should throw a DecryptionError, if private key is not in valid ASN.1 format', () => {
+            testContext.privateKeyContainer = plainPrivateKeyBadAsn1 as PrivateKeyContainer;
 
-            try {
-                Crypto.decryptFileKey(this.fileKey, this.privateKeyContainer);
-            } catch (error) {
-                someError = error;
-            }
-
-            expect(someError).toBeInstanceOf(DecryptionError);
+            expect(() => Crypto.decryptFileKey(testContext.fileKey, testContext.privateKeyContainer)).toThrow(DecryptionError);
         });
     });
     describe('with incompatible keys', () => {
-        it('should throw a VersionMismatchError, if versions are not compatible', function (this: Context) {
-            this.fileKey = encFileKey2048 as FileKey;
-            this.privateKeyContainer = plainPrivateKey4096 as PrivateKeyContainer;
-            let someError = null;
+        test('should throw a VersionMismatchError, if versions are not compatible', () => {
+            testContext.fileKey = encFileKey2048 as FileKey;
+            testContext.privateKeyContainer = plainPrivateKey4096 as PrivateKeyContainer;
 
-            try {
-                Crypto.decryptFileKey(this.fileKey, this.privateKeyContainer);
-            } catch (error) {
-                someError = error;
-            }
-
-            expect(someError).toBeInstanceOf(VersionMismatchError);
+            expect(() => Crypto.decryptFileKey(testContext.fileKey, testContext.privateKeyContainer)).toThrow(VersionMismatchError);
         });
-        it('should throw a VersionMismatchError, if versions are not compatible', function (this: Context) {
-            this.fileKey = encFileKey4096 as FileKey;
-            this.privateKeyContainer = plainPrivateKey2048 as PrivateKeyContainer;
-            let someError = null;
+        test('should throw a VersionMismatchError, if versions are not compatible', () => {
+            testContext.fileKey = encFileKey4096 as FileKey;
+            testContext.privateKeyContainer = plainPrivateKey2048 as PrivateKeyContainer;
 
-            try {
-                Crypto.decryptFileKey(this.fileKey, this.privateKeyContainer);
-            } catch (error) {
-                someError = error;
-            }
-
-            expect(someError).toBeInstanceOf(VersionMismatchError);
+            expect(() => Crypto.decryptFileKey(testContext.fileKey, testContext.privateKeyContainer)).toThrow(VersionMismatchError);
         });
     });
 });

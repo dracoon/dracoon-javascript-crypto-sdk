@@ -1,4 +1,4 @@
-import { Crypto } from '../../src/Crypto';
+import { Crypto } from '../../src/index';
 import { UserKeyPairVersion } from '../../src/enums/UserKeyPairVersion';
 import { InvalidArgumentError } from '../../src/error/models/InvalidArgumentError';
 import { InvalidVersionError } from '../../src/error/models/InvalidVersionError';
@@ -9,50 +9,38 @@ type Context = {
 };
 
 describe('Function: Crypto.generateUserKeyPair', () => {
+    let testContext: Context;
+
+    beforeEach(() => {
+        testContext = {} as Context;
+    });
+
     describe('with invalid keypair version', () => {
-        beforeEach(function (this: Context) {
-            this.password = 'someRandomPassword';
+        beforeEach(() => {
+            testContext.password = 'someRandomPassword';
         });
-        it('should throw an InvalidArgumentError, if version is falsy', async function (this: Context) {
-            let someError = null;
-            try {
-                await Crypto.generateUserKeyPair(null, this.password);
-            } catch (error) {
-                someError = error;
-            }
-            expect(someError).toBeInstanceOf(InvalidArgumentError);
+        test('should throw an InvalidArgumentError, if version is falsy', async () => {
+            expect.assertions(1);
+            await expect(() => Crypto.generateUserKeyPair(null, testContext.password)).rejects.toThrow(InvalidArgumentError);
         });
-        it('should throw an InvalidVersionError, if version is not supported', async function (this: Context) {
-            let someError = null;
-            try {
-                await Crypto.generateUserKeyPair('RSA-1024' as UserKeyPairVersion, this.password);
-            } catch (error) {
-                someError = error;
-            }
-            expect(someError).toBeInstanceOf(InvalidVersionError);
+        test('should throw an InvalidVersionError, if version is not supported', async () => {
+            const invalidVersion = 'RSA-1024' as UserKeyPairVersion;
+
+            expect.assertions(1);
+            await expect(() => Crypto.generateUserKeyPair(invalidVersion, testContext.password)).rejects.toThrow(InvalidVersionError);
         });
     });
     describe('with invalid password', () => {
-        beforeEach(function (this: Context) {
-            this.version = UserKeyPairVersion.RSA2048;
+        beforeEach(() => {
+            testContext.version = UserKeyPairVersion.RSA2048;
         });
-        it('should throw an InvalidArgumentError, if password is falsy', async function (this: Context) {
-            let someError = null;
-            try {
-                await Crypto.generateUserKeyPair(this.version, null);
-            } catch (error) {
-                someError = error;
-            }
-            expect(someError).toBeInstanceOf(InvalidArgumentError);
+        test('should throw an InvalidArgumentError, if password is falsy', async () => {
+            expect.assertions(1);
+            await expect(() => Crypto.generateUserKeyPair(testContext.version, null)).rejects.toThrow(InvalidArgumentError);
         });
-        it('should throw an InvalidArgumentError, if password is empty string', async function (this: Context) {
-            let someError = null;
-            try {
-                await Crypto.generateUserKeyPair(this.version, '');
-            } catch (error) {
-                someError = error;
-            }
-            expect(someError).toBeInstanceOf(InvalidArgumentError);
+        test('should throw an InvalidArgumentError, if password is empty string', async () => {
+            expect.assertions(1);
+            await expect(() => Crypto.generateUserKeyPair(testContext.version, '')).rejects.toThrow(InvalidArgumentError);
         });
     });
 });

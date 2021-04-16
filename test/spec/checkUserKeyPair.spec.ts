@@ -1,4 +1,4 @@
-import { Crypto } from '../../src/Crypto';
+import { Crypto } from '../../src/index';
 import { PrivateKeyContainer } from '../../src/models/PrivateKeyContainer';
 import { PublicKeyContainer } from '../../src/models/PublicKeyContainer';
 import { UserKeyPairContainer } from '../../src/models/UserKeyPairContainer';
@@ -18,61 +18,67 @@ type Context = {
 };
 
 describe('Function: Crypto.checkUserKeyPair', () => {
+    let testContext: Context;
+
+    beforeEach(() => {
+        testContext = {} as Context;
+    });
+
     describe('with keypair version RSA-2048 (A)', () => {
-        beforeEach(function (this: Context) {
-            this.userKeyPairContainer = {
+        beforeEach(() => {
+            testContext.userKeyPairContainer = {
                 privateKeyContainer: privateKey2048 as PrivateKeyContainer,
                 publicKeyContainer: publicKey2048 as PublicKeyContainer
             };
         });
-        it('should return true, if password is correct', function (this: Context) {
-            this.password = 'Qwer1234!';
+        test('should return true, if password is correct', () => {
+            testContext.password = 'Qwer1234!';
 
-            const result = Crypto.checkUserKeyPair(this.userKeyPairContainer, this.password);
+            const result = Crypto.checkUserKeyPair(testContext.userKeyPairContainer, testContext.password);
 
-            expect(result).toBeTrue();
+            expect(result).toBe(true);
         });
-        it('should return false, if password is not correct', function (this: Context) {
-            this.password = 'wrongPassword';
+        test('should return false, if password is not correct', () => {
+            testContext.password = 'wrongPassword';
 
-            const result = Crypto.checkUserKeyPair(this.userKeyPairContainer, this.password);
+            const result = Crypto.checkUserKeyPair(testContext.userKeyPairContainer, testContext.password);
 
-            expect(result).toBeFalse();
+            expect(result).toBe(false);
         });
     });
     describe('with keypair version RSA-4096', () => {
-        beforeEach(function (this: Context) {
-            this.userKeyPairContainer = {
+        beforeEach(() => {
+            testContext.userKeyPairContainer = {
                 privateKeyContainer: privateKey4096 as PrivateKeyContainer,
                 publicKeyContainer: publicKey4096 as PublicKeyContainer
             };
         });
-        it('should return true, if password is correct', function (this: Context) {
-            this.password = 'Qwer1234!';
+        test('should return true, if password is correct', () => {
+            testContext.password = 'Qwer1234!';
 
-            const result = Crypto.checkUserKeyPair(this.userKeyPairContainer, this.password);
+            const result = Crypto.checkUserKeyPair(testContext.userKeyPairContainer, testContext.password);
 
-            expect(result).toBeTrue();
+            expect(result).toBe(true);
         });
-        it('should return false, if password is not correct', function (this: Context) {
-            this.password = 'wrongPassword';
+        test('should return false, if password is not correct', () => {
+            testContext.password = 'wrongPassword';
 
-            const result = Crypto.checkUserKeyPair(this.userKeyPairContainer, this.password);
+            const result = Crypto.checkUserKeyPair(testContext.userKeyPairContainer, testContext.password);
 
-            expect(result).toBeFalse();
+            expect(result).toBe(false);
         });
     });
     describe('with modified key', () => {
-        it('should return false, if private key has been modified', function (this: Context) {
-            this.userKeyPairContainer = {
+        test('should return false, if private key has been modified', () => {
+            testContext.userKeyPairContainer = {
                 privateKeyContainer: privateKeyBadKey as PrivateKeyContainer,
                 publicKeyContainer: publicKey2048 as PublicKeyContainer
             };
-            this.password = 'Qwer1234!';
+            testContext.password = 'Qwer1234!';
 
-            const result = Crypto.checkUserKeyPair(this.userKeyPairContainer, this.password);
+            const result = Crypto.checkUserKeyPair(testContext.userKeyPairContainer, testContext.password);
 
-            expect(result).toBeFalse();
+            expect(result).toBe(false);
         });
     });
 });

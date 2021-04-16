@@ -1,8 +1,10 @@
 .idea
 coverage
+dependency-check*
 dist
 lib
 node_modules
 scripts/*
 !scripts/keygenerator.js
 **/*.tgz
+odc.log
