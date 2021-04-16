@@ -7,3 +7,4 @@ node_modules
 scripts/*
 !scripts/keygenerator.js
 **/*.tgz
+odc.log
