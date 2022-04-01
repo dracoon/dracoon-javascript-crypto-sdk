@@ -56,6 +56,9 @@ An example can be found here: `example/program.js`
 
 The example shows the complete encryption/decryption workflow, including key generation and key operations.
 
+IMPORTANT: please create a new file key for every file you encrypt!
+IMPORTANT: please call doFinal() to complete decryption BEFORE using the decrypted data!
+
 ```javascript
 ...
 
