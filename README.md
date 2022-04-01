@@ -22,7 +22,7 @@ The following Browser versions are officially supported:
 
 The following Node versions are officially supported:
 
--   Node v14+
+-   Node v16+
 
 Older Browser/Node versions might still work, but have not been tested.
 

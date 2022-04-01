@@ -1,5 +1,6 @@
 .husky
 .idea
+.vscode
 coverage
 dependency-check*
 dist
