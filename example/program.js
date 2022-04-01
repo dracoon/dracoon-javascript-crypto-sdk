@@ -3,6 +3,9 @@ import { Crypto, EncryptedDataContainer, PlainDataContainer, PlainFileKeyVersion
 /**
  * This file shows how to use the Dracoon JavaScript Crypto SDK.
  * For the sake of simplicity, error handling is ignored.
+ *
+ * IMPORTANT: please create a new file key for every file you encrypt!
+ * IMPORTANT: please call doFinal() to complete decryption BEFORE using the decrypted data!
  */
 
 const CHUNK_SIZE = 16;
