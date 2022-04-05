@@ -22,7 +22,7 @@ install packages:
     only:
         - merge_requests
         - main
-        - release/*
+        - tags
 
 build:
     stage: build
@@ -39,7 +39,7 @@ build:
     only:
         - merge_requests
         - main
-        - release/*
+        - tags
 
 code style:
     stage: test
@@ -54,7 +54,7 @@ code style:
     only:
         - merge_requests
         - main
-        - release/*
+        - tags
 
 unit test:
     stage: test
@@ -71,7 +71,7 @@ unit test:
     only:
         - merge_requests
         - main
-        - release/*
+        - tags
 
 sonar:
     stage: test
@@ -125,7 +125,7 @@ publish release:
     script:
         - npm publish
     only:
-        - release/*
+        - tags
 
 publish npm:
     stage: publish
@@ -141,4 +141,4 @@ publish npm:
     script:
         - npm publish
     only:
-        - release/*
+        - tags
