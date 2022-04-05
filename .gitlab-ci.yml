@@ -1,0 +1,144 @@
+stages:
+    - install
+    - build
+    - test
+    - publish
+
+image: node:lts-bullseye
+
+cache: &cache
+    when: on_success
+    key:
+        files:
+            - package-lock.json
+    paths:
+        - .npm/
+        - node_modules/
+
+install packages:
+    stage: install
+    script:
+        - npm ci --cache .npm --prefer-offline
+    only:
+        - merge_requests
+        - main
+        - release/*
+
+build:
+    stage: build
+    needs:
+        - install packages
+    cache:
+        <<: *cache
+        policy: pull
+    artifacts:
+        paths:
+            - lib/
+    script:
+        - npm run build
+    only:
+        - merge_requests
+        - main
+        - release/*
+
+code style:
+    stage: test
+    needs:
+        - install packages
+    cache:
+        <<: *cache
+        policy: pull
+    script:
+        - npm run prettier:check
+        - npm run eslint:check
+    only:
+        - merge_requests
+        - main
+        - release/*
+
+unit test:
+    stage: test
+    needs:
+        - install packages
+    cache:
+        <<: *cache
+        policy: pull
+    artifacts:
+        paths:
+            - coverage/
+    script:
+        - npm run test
+    only:
+        - merge_requests
+        - main
+        - release/*
+
+sonar:
+    stage: test
+    needs:
+        - unit test
+    image:
+        name: sonarsource/sonar-scanner-cli:latest
+        entrypoint: ['']
+    cache:
+        key: '${CI_JOB_NAME}'
+        paths:
+            - .sonar/cache
+    variables:
+        SONAR_USER_HOME: '${CI_PROJECT_DIR}/.sonar'
+        GIT_DEPTH: '0'
+    allow_failure: true
+    script:
+        - sonar-scanner
+    only:
+        - main
+
+publish snapshot:
+    stage: publish
+    needs:
+        - build
+    secrets:
+        NPM_AUTH_TOKEN:
+            vault: Artifactory/npm-auth-token@Build-Environment
+            file: false
+    before_script:
+        - npm config set always-auth true
+        - npm config set registry https://artifactory.dracoon.com/artifactory/api/npm/npm-snapshot-local/
+        - npm config set -- '//artifactory.dracoon.com/artifactory/api/npm/npm-snapshot-local/:_authToken' "${NPM_AUTH_TOKEN}"
+    script:
+        - npm publish
+    only:
+        - main
+
+publish release:
+    stage: publish
+    needs:
+        - build
+    secrets:
+        NPM_AUTH_TOKEN:
+            vault: Artifactory/npm-auth-token@Build-Environment
+            file: false
+    before_script:
+        - npm config set always-auth true
+        - npm config set registry https://artifactory.dracoon.com/artifactory/api/npm/npm-release-local/
+        - npm config set -- '//artifactory.dracoon.com/artifactory/api/npm/npm-release-local/:_authToken' "${NPM_AUTH_TOKEN}"
+    script:
+        - npm publish
+    only:
+        - release/*
+
+publish npm:
+    stage: publish
+    needs:
+        - build
+    secrets:
+        NPM_AUTH_TOKEN:
+            vault: Npm/access-token@Build-Environment
+            file: false
+    before_script:
+        - npm config set registry https://registry.npmjs.org/
+        - npm config set -- '//registry.npmjs.org/:_authToken' "${NPM_AUTH_TOKEN}"
+    script:
+        - npm publish
+    only:
+        - release/*

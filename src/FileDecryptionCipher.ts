@@ -8,7 +8,7 @@ import { InvalidArgumentError } from './error/models/InvalidArgumentError';
 import { PlainFileKey } from './models/PlainFileKey';
 
 export class FileDecryptionCipher {
-    private cipher: forge.cipher.BlockCipher;
+    private readonly cipher: forge.cipher.BlockCipher;
 
     /**
      * Initializes a new FileDecryptionCipher, which can be used to decrypt data in chunks.

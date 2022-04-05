@@ -1,8 +1,8 @@
 import { Base64 } from 'node-forge';
 
 export class EncryptedDataContainer {
-    private content: Uint8Array;
-    private tag: Base64 | undefined;
+    private readonly content: Uint8Array;
+    private readonly tag: Base64 | undefined;
 
     public constructor(content: Uint8Array, tag?: Base64) {
         this.content = content;
