@@ -73,10 +73,31 @@ unit test:
         - main
         - tags
 
+dependency check:
+    stage: test
+    needs:
+        - install packages
+    image:
+        name: owasp/dependency-check:latest
+        entrypoint: ['']
+    artifacts:
+        paths:
+            - report/
+    script:
+        - >-
+            /usr/share/dependency-check/bin/dependency-check.sh
+            --scan .
+            --format "ALL"
+            --project dracoon-sdk-crypto-javascript
+            --out ./report
+    only:
+        - main
+
 sonar:
     stage: test
     needs:
         - unit test
+        - dependency check
     image:
         name: sonarsource/sonar-scanner-cli:latest
         entrypoint: ['']
