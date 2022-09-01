@@ -118,6 +118,8 @@ publish snapshot:
     stage: publish
     needs:
         - build
+        - code style
+        - unit test
     secrets:
         NPM_AUTH_TOKEN:
             vault: Artifactory/npm-auth-token@Build-Environment
@@ -135,6 +137,8 @@ publish release:
     stage: publish
     needs:
         - build
+        - code style
+        - unit test
     secrets:
         NPM_AUTH_TOKEN:
             vault: Artifactory/npm-auth-token@Build-Environment
@@ -152,6 +156,8 @@ publish npm:
     stage: publish
     needs:
         - build
+        - code style
+        - unit test
     secrets:
         NPM_AUTH_TOKEN:
             vault: Npm/access-token@Build-Environment
