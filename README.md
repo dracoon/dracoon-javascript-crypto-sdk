@@ -1,4 +1,4 @@
-[![CI](https://travis-ci.com/dracoon/dracoon-javascript-crypto-sdk.svg?branch=main)](https://app.travis-ci.com/github/dracoon)
+[![CI](https://github.com/dracoon/dracoon-javascript-crypto-sdk/actions/workflows/main.yml/badge.svg)](https://github.com/dracoon/dracoon-javascript-crypto-sdk/actions)
 [![Node version](https://img.shields.io/npm/v/@dracoon-official/crypto-sdk)](https://npmjs.com/package/@dracoon-official/crypto-sdk)
 
 # Dracoon JavaScript Crypto SDK
