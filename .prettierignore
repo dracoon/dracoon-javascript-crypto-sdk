@@ -6,3 +6,4 @@ dependency-check*
 dist
 lib
 node_modules
+renovate.json
