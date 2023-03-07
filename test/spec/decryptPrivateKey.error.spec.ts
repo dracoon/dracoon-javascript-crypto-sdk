@@ -36,8 +36,12 @@ describe('Function: Crypto.decryptPrivateKey', () => {
         beforeEach(() => {
             testContext.password = 'Qwer1234!';
         });
+
         test('should throw an InvalidArgumentError, if keypair is falsy', () => {
-            expect(() => Crypto.decryptPrivateKey(null, testContext.password)).toThrow(InvalidArgumentError);
+            expect(() => Crypto.decryptPrivateKey(null as unknown as UserKeyPairContainer, testContext.password)).toThrow(InvalidArgumentError);
+        });
+        test('should throw an InvalidArgumentError, if key is falsy', () => {
+            expect(() => Crypto.decryptPrivateKeyOnly(null as unknown as PrivateKeyContainer, testContext.password)).toThrow(InvalidArgumentError);
         });
         test('should throw an InvalidKeyPairError, if versions of keys dont match', () => {
             testContext.userKeyPairContainer = {
@@ -46,7 +50,9 @@ describe('Function: Crypto.decryptPrivateKey', () => {
             };
 
             expect(() => Crypto.decryptPrivateKey(testContext.userKeyPairContainer, testContext.password)).toThrow(InvalidKeyPairError);
+            
         });
+
         test('should throw an InvalidKeyPairError, if version is not supported', () => {
             testContext.userKeyPairContainer = {
                 privateKeyContainer: privateKeyBadVersion as PrivateKeyContainer,
@@ -54,6 +60,7 @@ describe('Function: Crypto.decryptPrivateKey', () => {
             };
 
             expect(() => Crypto.decryptPrivateKey(testContext.userKeyPairContainer, testContext.password)).toThrow(InvalidKeyPairError);
+            expect(() => Crypto.decryptPrivateKeyOnly(testContext.userKeyPairContainer.privateKeyContainer, testContext.password)).toThrow(InvalidKeyPairError);
         });
         test('should throw a DecryptionError, if keys are not in valid PEM format', () => {
             testContext.userKeyPairContainer = {
@@ -62,6 +69,7 @@ describe('Function: Crypto.decryptPrivateKey', () => {
             };
 
             expect(() => Crypto.decryptPrivateKey(testContext.userKeyPairContainer, testContext.password)).toThrow(DecryptionError);
+            expect(() => Crypto.decryptPrivateKeyOnly(testContext.userKeyPairContainer.privateKeyContainer, testContext.password)).toThrow(DecryptionError);
         });
         test('should throw a DecryptionError, if keys are not in valid ASN.1 format', () => {
             testContext.userKeyPairContainer = {
@@ -70,6 +78,7 @@ describe('Function: Crypto.decryptPrivateKey', () => {
             };
 
             expect(() => Crypto.decryptPrivateKey(testContext.userKeyPairContainer, testContext.password)).toThrow(DecryptionError);
+            expect(() => Crypto.decryptPrivateKeyOnly(testContext.userKeyPairContainer.privateKeyContainer, testContext.password)).toThrow(DecryptionError);
         });
         test('should throw a DecryptionError, if private key has been modified', () => {
             testContext.userKeyPairContainer = {
@@ -78,6 +87,7 @@ describe('Function: Crypto.decryptPrivateKey', () => {
             };
 
             expect(() => Crypto.decryptPrivateKey(testContext.userKeyPairContainer, testContext.password)).toThrow(DecryptionError);
+            expect(() => Crypto.decryptPrivateKeyOnly(testContext.userKeyPairContainer.privateKeyContainer, testContext.password)).toThrow(DecryptionError);
         });
     });
     describe('with invalid password', () => {
@@ -88,13 +98,16 @@ describe('Function: Crypto.decryptPrivateKey', () => {
             };
         });
         test('should throw an InvalidArgumentError, if password is falsy', () => {
-            expect(() => Crypto.decryptPrivateKey(testContext.userKeyPairContainer, null)).toThrow(InvalidArgumentError);
+            expect(() => Crypto.decryptPrivateKey(testContext.userKeyPairContainer, null as unknown as string)).toThrow(InvalidArgumentError);
+            expect(() => Crypto.decryptPrivateKeyOnly(testContext.userKeyPairContainer.privateKeyContainer, null as unknown as string)).toThrow(InvalidArgumentError);
         });
         test('should throw an InvalidArgumentError, if password is empty string', () => {
             expect(() => Crypto.decryptPrivateKey(testContext.userKeyPairContainer, '')).toThrow(InvalidArgumentError);
+            expect(() => Crypto.decryptPrivateKeyOnly(testContext.userKeyPairContainer.privateKeyContainer, '')).toThrow(InvalidArgumentError);
         });
         test('should throw a DecryptionError, if password is not correct', () => {
             expect(() => Crypto.decryptPrivateKey(testContext.userKeyPairContainer, 'wrongPassword')).toThrow(DecryptionError);
+            expect(() => Crypto.decryptPrivateKeyOnly(testContext.userKeyPairContainer.privateKeyContainer, 'wrongPassword')).toThrow(DecryptionError);
         });
     });
 });

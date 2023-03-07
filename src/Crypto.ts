@@ -1,7 +1,6 @@
 import { FileDecryptionCipher } from './FileDecryptionCipher';
 import { FileEncryptionCipher } from './FileEncryptionCipher';
 
-import { FileKeyVersion } from './enums/FileKeyVersion';
 import { PlainFileKeyVersion } from './enums/PlainFileKeyVersion';
 import { UserKeyPairVersion } from './enums/UserKeyPairVersion';
 
@@ -15,7 +14,7 @@ import { InvalidVersionError } from './error/models/InvalidVersionError';
 import { VersionMismatchError } from './error/models/VersionMismatchError';
 
 import { decryptFileKey } from './internal/decryptFileKey';
-import { decryptPrivateKey } from './internal/decryptPrivateKey';
+import { decryptPrivateKey, decryptPrivateKeyOnly } from './internal/decryptPrivateKey';
 import { encryptFileKey } from './internal/encryptFileKey';
 import { encryptPrivateKey } from './internal/encryptPrivateKey';
 import { generateFileKey } from './internal/generateFileKey';
@@ -128,6 +127,36 @@ export class Crypto {
 
         try {
             return decryptPrivateKey(userKeyPairContainer, password);
+        } catch (error) {
+            throw new DecryptionError();
+        }
+    }
+
+    /**
+     * This method decrypts a given key pair with a given password.
+     *
+     * @param privateKeyContainer The key pair that should be decrypted.
+     * @param password The password that should be used for the decryption.
+     * @returns The plain key pair that contains the unencrypted private key.
+     *
+     * @throws {InvalidArgumentError} This error is thrown, if a required argument has a falsy value.
+     * @throws {InvalidKeyPairError} This error is thrown, if the provided private key container is invalid.
+     * @throws {DecryptionError} This error is thrown, if the actual decryption fails.
+     */
+    public static decryptPrivateKeyOnly(privateKeyContainer: PrivateKeyContainer, password: string): PrivateKeyContainer {
+        Crypto.init();
+
+        if (!privateKeyContainer || !password) {
+            throw new InvalidArgumentError();
+        }
+
+        const keyValid: boolean = CryptoKeyPairChecker.checkKeyContainer(privateKeyContainer);
+        if (!keyValid) {
+            throw new InvalidKeyPairError();
+        }
+
+        try {
+            return decryptPrivateKeyOnly(privateKeyContainer, password);
         } catch (error) {
             throw new DecryptionError();
         }

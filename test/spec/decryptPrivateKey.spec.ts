@@ -126,17 +126,8 @@ describe('Function: Crypto.decryptPrivateKey', () => {
             expect(plainUserKeyPairContainer.publicKeyContainer.publicKey).toContain('-----BEGIN PUBLIC KEY-----');
             expect(plainUserKeyPairContainer.publicKeyContainer.publicKey).toContain('-----END PUBLIC KEY-----');
         });
-        test('should return a PlainUserKeyPairContainer with identical public key', () => {
-            const plainUserKeyPairContainer: PlainUserKeyPairContainer = Crypto.decryptPrivateKey(
-                testContext.userKeyPairContainer,
-                testContext.password
-            );
 
-            expect(plainUserKeyPairContainer.publicKeyContainer.publicKey).toBe(
-                testContext.userKeyPairContainer.publicKeyContainer.publicKey
-            );
-        });
-        test('should return a PlainUserKeyPairContainer with the correct plain private key', () => {
+        test('should return a PrivateKeyContainer with the correct plain private key', () => {
             const plainUserKeyPairContainer: PlainUserKeyPairContainer = Crypto.decryptPrivateKey(
                 testContext.userKeyPairContainer,
                 testContext.password
@@ -145,4 +136,102 @@ describe('Function: Crypto.decryptPrivateKey', () => {
             expect(plainUserKeyPairContainer.privateKeyContainer.privateKey).toBe(plainPrivateKey4096.privateKey);
         });
     });
+
+
+    describe('with keypair version RSA-2048 (A) private key only', () => {
+        beforeEach(() => {
+            testContext.userKeyPairContainer = {
+                privateKeyContainer: privateKey2048 as PrivateKeyContainer,
+                publicKeyContainer: publicKey2048 as PublicKeyContainer
+            };
+            testContext.password = 'Qwer1234!';
+      
+        });
+        test('should return a PrivateKeyContainer with the correct properties', () => {
+            const plainPrivateKeyContainer: PrivateKeyContainer = Crypto.decryptPrivateKeyOnly(
+                testContext.userKeyPairContainer.privateKeyContainer,
+                testContext.password
+            );
+
+            expect(Object.keys(plainPrivateKeyContainer)).toContain('version');
+            expect(Object.keys(plainPrivateKeyContainer)).toContain('privateKey');
+        });
+        test('should return a PrivateKeyContainer with the correct crypto version', () => {
+            const plainPrivateKeyContainer: PrivateKeyContainer = Crypto.decryptPrivateKeyOnly(
+                testContext.userKeyPairContainer.privateKeyContainer,
+                testContext.password
+            );
+
+            expect(plainPrivateKeyContainer.version).toBe(UserKeyPairVersion.RSA2048);
+        });
+        test('should return a PrivateKeyContainer with key in PEM format', () => {
+            const plainPrivateKeyContainer: PrivateKeyContainer = Crypto.decryptPrivateKeyOnly(
+                testContext.userKeyPairContainer.privateKeyContainer,
+                testContext.password
+            );
+
+            expect(plainPrivateKeyContainer.privateKey).toContain('-----BEGIN RSA PRIVATE KEY-----');
+            expect(plainPrivateKeyContainer.privateKey).toContain('-----END RSA PRIVATE KEY-----');
+
+        });
+
+        test('should return a PrivateKeyContainer with the correct plain private key', () => {
+            const plainPrivateKeyContainer: PrivateKeyContainer = Crypto.decryptPrivateKeyOnly(
+                testContext.userKeyPairContainer.privateKeyContainer,
+                testContext.password
+            );
+
+            expect(plainPrivateKeyContainer.privateKey).toBe(plainPrivateKey2048.privateKey);
+        });
+    });
+    describe('with keypair version RSA-4096 private key only', () => {
+        beforeEach(() => {
+            testContext.userKeyPairContainer = {
+                privateKeyContainer: privateKey4096 as PrivateKeyContainer,
+                publicKeyContainer: publicKey4096 as PublicKeyContainer
+            };
+            testContext.password = 'Qwer1234!';
+        });
+        test('should return a PrivateKeyContainer with the correct properties', () => {
+            const plainPrivateKeyContainer: PrivateKeyContainer = Crypto.decryptPrivateKeyOnly(
+                testContext.userKeyPairContainer.privateKeyContainer,
+                testContext.password
+            );
+
+            expect(Object.keys(plainPrivateKeyContainer)).toContain('version');
+            expect(Object.keys(plainPrivateKeyContainer)).toContain('privateKey');
+
+        });
+        test('should return a PrivateKeyContainer with the correct crypto version', () => {
+            const plainPrivateKeyContainer: PrivateKeyContainer = Crypto.decryptPrivateKeyOnly(
+                testContext.userKeyPairContainer.privateKeyContainer,
+                testContext.password
+            );
+
+            expect(plainPrivateKeyContainer.version).toBe(UserKeyPairVersion.RSA4096);
+
+        });
+        test('should return a PrivateKeyContainer with keys in PEM format', () => {
+            const plainPrivateKeyContainer: PrivateKeyContainer = Crypto.decryptPrivateKeyOnly(
+                testContext.userKeyPairContainer.privateKeyContainer,
+                testContext.password
+            );
+
+            expect(plainPrivateKeyContainer.privateKey).toContain('-----BEGIN RSA PRIVATE KEY-----');
+            expect(plainPrivateKeyContainer.privateKey).toContain('-----END RSA PRIVATE KEY-----');
+
+        });
+
+        test('should return a PrivateKeyContainer with the correct plain private key', () => {
+            const plainPrivateKeyContainer: PrivateKeyContainer = Crypto.decryptPrivateKeyOnly(
+                testContext.userKeyPairContainer.privateKeyContainer,
+                testContext.password
+            );
+
+            expect(plainPrivateKeyContainer.privateKey).toBe(plainPrivateKey4096.privateKey);
+        });
+    });
 });
+
+
+
