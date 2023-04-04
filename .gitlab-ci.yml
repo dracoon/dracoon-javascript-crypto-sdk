@@ -1,7 +1,7 @@
 include:
   - project: 'dracoon/cicd/pipeline/pipeline-commons'
     file: 'pipeline-commons.yml'
-    ref: main
+    ref: 'feature/npm-generalization'
 
 # --- GLOBAL SETTINGS / VARIABLES ---------------------------------------------
 
