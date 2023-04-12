@@ -32,7 +32,9 @@
         "install:ci": "npm install --cache .npm --prefer-offline --no-audit",
         "build:ci": "rollup -c rollup.config.js",
         "test:ci": "jest --config=test/jest.config.ts",
-        "format:ci": "prettier -c ."
+        "format:ci": "prettier -c .",
+        "publish:ci": "npm publish",
+        "publish-public:ci": "npm publish"
     },
     "dependencies": {
         "node-forge": "^1.3.1"
