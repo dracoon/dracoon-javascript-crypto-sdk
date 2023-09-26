@@ -1,14 +1,13 @@
 include:
   - project: 'dracoon/cicd/pipeline/pipeline-commons'
     file: 'pipeline-commons.yml'
-    ref: '1.4.0'
+    ref: '2.0.0'
 
 # --- GLOBAL SETTINGS / VARIABLES ---------------------------------------------
 
 variables:
   NAME: dracoon-sdk-crypto-javascript
-
   ENABLE_INTEGRATION_TESTING: 'false'
   ENABLE_ARTIFACT_PUBLISHING: 'true'
   ENABLE_PUBLIC_ARTIFACT_PUBLISHING: 'true'
-  ENABLE_IMAGE_PUBLISHING: 'false'
+  ENABLE_CONTAINER_IMAGES: 'false'
