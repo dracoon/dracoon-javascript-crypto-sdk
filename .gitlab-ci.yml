@@ -7,6 +7,8 @@ include:
 
 variables:
   NAME: dracoon-sdk-crypto-javascript
+  JIRA_PROJECT_ID: SDKCRYPTJS
+  
   ENABLE_INTEGRATION_TESTING: 'false'
   ENABLE_ARTIFACT_PUBLISHING: 'true'
   ENABLE_PUBLIC_ARTIFACT_PUBLISHING: 'true'
