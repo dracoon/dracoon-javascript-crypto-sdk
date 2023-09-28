@@ -24,7 +24,7 @@ type Context = {
     password: string;
 };
 
-describe('Function: Crypto.encryptPrivateKey', () => {
+describe('Function: Crypto.encryptPrivateKeyAsync', () => {
     let testContext: Context;
 
     beforeEach(() => {
@@ -36,7 +36,7 @@ describe('Function: Crypto.encryptPrivateKey', () => {
             testContext.password = 'Qwer1234!';
         });
         test('should throw an InvalidArgumentError, if keypair is falsy', () => {
-            expect(() => Crypto.encryptPrivateKey(null, testContext.password)).toThrow(InvalidArgumentError);
+            expect(() => Crypto.encryptPrivateKeyAsync(null, testContext.password)).rejects.toThrow(InvalidArgumentError);
         });
         test('should throw an InvalidKeyPairError, if versions of keys dont match', () => {
             testContext.plainUserKeyPairContainer = {
@@ -44,7 +44,7 @@ describe('Function: Crypto.encryptPrivateKey', () => {
                 publicKeyContainer: publicKey4096 as PublicKeyContainer
             };
 
-            expect(() => Crypto.encryptPrivateKey(testContext.plainUserKeyPairContainer, testContext.password)).toThrow(
+            expect(() => Crypto.encryptPrivateKeyAsync(testContext.plainUserKeyPairContainer, testContext.password)).rejects.toThrow(
                 InvalidKeyPairError
             );
         });
@@ -54,7 +54,7 @@ describe('Function: Crypto.encryptPrivateKey', () => {
                 publicKeyContainer: publicKeyBadVersion as PublicKeyContainer
             };
 
-            expect(() => Crypto.encryptPrivateKey(testContext.plainUserKeyPairContainer, testContext.password)).toThrow(
+            expect(() => Crypto.encryptPrivateKeyAsync(testContext.plainUserKeyPairContainer, testContext.password)).rejects.toThrow(
                 InvalidKeyPairError
             );
         });
@@ -64,7 +64,9 @@ describe('Function: Crypto.encryptPrivateKey', () => {
                 publicKeyContainer: publicKeyBadPem as PublicKeyContainer
             };
 
-            expect(() => Crypto.encryptPrivateKey(testContext.plainUserKeyPairContainer, testContext.password)).toThrow(EncryptionError);
+            expect(() => Crypto.encryptPrivateKeyAsync(testContext.plainUserKeyPairContainer, testContext.password)).rejects.toThrow(
+                EncryptionError
+            );
         });
         test('should throw an EncryptionError, if keys are not in valid ASN.1 format', () => {
             testContext.plainUserKeyPairContainer = {
@@ -72,7 +74,9 @@ describe('Function: Crypto.encryptPrivateKey', () => {
                 publicKeyContainer: publicKeyBadAsn1 as PublicKeyContainer
             };
 
-            expect(() => Crypto.encryptPrivateKey(testContext.plainUserKeyPairContainer, testContext.password)).toThrow(EncryptionError);
+            expect(() => Crypto.encryptPrivateKeyAsync(testContext.plainUserKeyPairContainer, testContext.password)).rejects.toThrow(
+                EncryptionError
+            );
         });
     });
     describe('with invalid password', () => {
@@ -83,10 +87,10 @@ describe('Function: Crypto.encryptPrivateKey', () => {
             };
         });
         test('should throw an InvalidArgumentError, if password is falsy', () => {
-            expect(() => Crypto.encryptPrivateKey(testContext.plainUserKeyPairContainer, null)).toThrow(InvalidArgumentError);
+            expect(() => Crypto.encryptPrivateKeyAsync(testContext.plainUserKeyPairContainer, null)).rejects.toThrow(InvalidArgumentError);
         });
         test('should throw an InvalidArgumentError, if password is empty string', () => {
-            expect(() => Crypto.encryptPrivateKey(testContext.plainUserKeyPairContainer, '')).toThrow(InvalidArgumentError);
+            expect(() => Crypto.encryptPrivateKeyAsync(testContext.plainUserKeyPairContainer, '')).rejects.toThrow(InvalidArgumentError);
         });
     });
 });

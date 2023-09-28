@@ -1,7 +1,6 @@
 import { FileDecryptionCipher } from './FileDecryptionCipher';
 import { FileEncryptionCipher } from './FileEncryptionCipher';
 
-import { FileKeyVersion } from './enums/FileKeyVersion';
 import { PlainFileKeyVersion } from './enums/PlainFileKeyVersion';
 import { UserKeyPairVersion } from './enums/UserKeyPairVersion';
 
@@ -21,6 +20,7 @@ import { encryptPrivateKey } from './internal/encryptPrivateKey';
 import { generateFileKey } from './internal/generateFileKey';
 import { generatePlainUserKeyPair } from './internal/generatePlainUserKeyPair';
 import { initCryptoVersionChecker } from './internal/initCryptoVersionChecker';
+import { decryptPrivateKeyAsync } from './internal/privateKeyAsync/decryptPrivateKeyAsync';
 
 import { FileKey } from './models/FileKey';
 import { PlainFileKey } from './models/PlainFileKey';
@@ -29,6 +29,7 @@ import { PrivateKeyContainer } from './models/PrivateKeyContainer';
 import { PublicKeyContainer } from './models/PublicKeyContainer';
 import { UserKeyPairContainer } from './models/UserKeyPairContainer';
 
+import { encryptPrivateKeyAsync } from './internal/privateKeyAsync/encryptPrivateKeyAsync';
 import { CryptoFileKeyChecker } from './utils/CryptoFileKeyChecker';
 import { CryptoKeyPairChecker } from './utils/CryptoKeyPairChecker';
 import { CryptoVersionChecker } from './utils/CryptoVersionChecker';
@@ -67,7 +68,7 @@ export class Crypto {
 
         try {
             const plainUserKeyPair = await generatePlainUserKeyPair(version);
-            return encryptPrivateKey(plainUserKeyPair, password);
+            return await encryptPrivateKeyAsync(plainUserKeyPair, password);
         } catch (error) {
             throw new GenericCryptoError();
         }
@@ -83,6 +84,10 @@ export class Crypto {
      * @throws {InvalidArgumentError} This error is thrown, if a required argument has a falsy value.
      * @throws {InvalidKeyPairError} This error is thrown, if the provided key pair is invalid.
      * @throws {EncryptionError} This error is thrown, if the actual encryption fails.
+     *
+     * @deprecated The synchronous version uses plain JavaScript and is very slow with the iteraction count used for encryption.
+     *  Consider switching to the async version encryptPrivateKeyAsync, which uses the WebCrypto API for native speed.
+     * @see encryptPrivateKeyAsync
      */
     public static encryptPrivateKey(plainUserKeyPairContainer: PlainUserKeyPairContainer, password: string): UserKeyPairContainer {
         Crypto.init();
@@ -104,6 +109,39 @@ export class Crypto {
     }
 
     /**
+     * This method encrypts a given plain key pair with a given password.
+     *
+     * @param plainUserKeyPairContainer The plain key pair that should be encrypted.
+     * @param password The password that should be used for the encryption.
+     * @returns The key pair that contains the encrypted private key.
+     *
+     * @throws {InvalidArgumentError} This error is thrown, if a required argument has a falsy value.
+     * @throws {InvalidKeyPairError} This error is thrown, if the provided key pair is invalid.
+     * @throws {EncryptionError} This error is thrown, if the actual encryption fails.
+     */
+    public static async encryptPrivateKeyAsync(
+        plainUserKeyPairContainer: PlainUserKeyPairContainer,
+        password: string
+    ): Promise<UserKeyPairContainer> {
+        Crypto.init();
+
+        if (!plainUserKeyPairContainer || !password) {
+            throw new InvalidArgumentError();
+        }
+
+        const keyPairValid: boolean = CryptoKeyPairChecker.checkKeyPairContainer(plainUserKeyPairContainer);
+        if (!keyPairValid) {
+            throw new InvalidKeyPairError();
+        }
+
+        try {
+            return await encryptPrivateKeyAsync(plainUserKeyPairContainer, password);
+        } catch (error) {
+            throw new EncryptionError();
+        }
+    }
+
+    /**
      * This method decrypts a given key pair with a given password.
      *
      * @param userKeyPairContainer The key pair that should be decrypted.
@@ -113,6 +151,10 @@ export class Crypto {
      * @throws {InvalidArgumentError} This error is thrown, if a required argument has a falsy value.
      * @throws {InvalidKeyPairError} This error is thrown, if the provided key pair is invalid.
      * @throws {DecryptionError} This error is thrown, if the actual decryption fails.
+     *
+     * @deprecated The synchronous version uses plain JavaScript and is very slow with the iteraction count commonly used for encryption.
+     *  Consider switching to the async version decryptPrivateKeyAsync, which uses the WebCrypto API for native speed.
+     * @see decryptPrivateKeyAsync
      */
     public static decryptPrivateKey(userKeyPairContainer: UserKeyPairContainer, password: string): PlainUserKeyPairContainer {
         Crypto.init();
@@ -134,6 +176,39 @@ export class Crypto {
     }
 
     /**
+     * This method decrypts a given key pair with a given password.
+     *
+     * @param userKeyPairContainer The key pair that should be decrypted.
+     * @param password The password that should be used for the decryption.
+     * @returns A promise of the plain key pair that contains the unencrypted private key.
+     *
+     * @throws {InvalidArgumentError} This error is thrown, if a required argument has a falsy value.
+     * @throws {InvalidKeyPairError} This error is thrown, if the provided key pair is invalid.
+     * @throws {DecryptionError} This error is thrown, if the actual decryption fails.
+     */
+    public static async decryptPrivateKeyAsync(
+        userKeyPairContainer: UserKeyPairContainer,
+        password: string
+    ): Promise<PlainUserKeyPairContainer> {
+        Crypto.init();
+
+        if (!userKeyPairContainer || !password) {
+            throw new InvalidArgumentError();
+        }
+
+        const keyPairValid: boolean = CryptoKeyPairChecker.checkKeyPairContainer(userKeyPairContainer);
+        if (!keyPairValid) {
+            throw new InvalidKeyPairError();
+        }
+
+        try {
+            return await decryptPrivateKeyAsync(userKeyPairContainer, password);
+        } catch (error) {
+            throw new DecryptionError();
+        }
+    }
+
+    /**
      * This method checks, if a given key pair can be decrypted with a given password.
      *
      * @param userKeyPairContainer The key pair that should be checked.
@@ -142,6 +217,11 @@ export class Crypto {
      *
      * @throws {InvalidArgumentError} This error is thrown, if a required argument has a falsy value.
      * @throws {InvalidKeyPairError} This error is thrown, if the provided key pair is invalid.
+     *
+     * @deprecated The synchronous version uses plain JavaScript decryption and is very slow with the iteraction count commonly
+     * used for encryption. Consider switching to the async version checkUserKeyPairAsync, which uses the decryptPrivateKeyAsync
+     * to check the password.
+     * @see checkUserKeyPairAsync
      */
     public static checkUserKeyPair(userKeyPairContainer: UserKeyPairContainer, password: string): boolean {
         Crypto.init();
@@ -157,6 +237,35 @@ export class Crypto {
 
         try {
             return !!decryptPrivateKey(userKeyPairContainer, password);
+        } catch (error) {
+            return false;
+        }
+    }
+
+    /**
+     * This method checks, if a given key pair can be decrypted with a given password.
+     *
+     * @param userKeyPairContainer The key pair that should be checked.
+     * @param password The password that should be used for the check.
+     * @returns A Promise resolving to true or false depending on, if the private key of the key pair can be decrypted.
+     *
+     * @throws {InvalidArgumentError} This error is thrown, if a required argument has a falsy value.
+     * @throws {InvalidKeyPairError} This error is thrown, if the provided key pair is invalid.
+     */
+    public static async checkUserKeyPairAsync(userKeyPairContainer: UserKeyPairContainer, password: string): Promise<boolean> {
+        Crypto.init();
+
+        if (!userKeyPairContainer || !password) {
+            throw new InvalidArgumentError();
+        }
+
+        const keyPairValid: boolean = CryptoKeyPairChecker.checkKeyPairContainer(userKeyPairContainer);
+        if (!keyPairValid) {
+            throw new InvalidKeyPairError();
+        }
+
+        try {
+            return !!(await decryptPrivateKeyAsync(userKeyPairContainer, password));
         } catch (error) {
             return false;
         }

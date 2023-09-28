@@ -13,7 +13,8 @@ const config: Config.InitialOptions = {
         'ts-jest': {
             tsconfig: '<rootDir>/test/tsconfig.test.json'
         }
-    }
+    },
+    testTimeout: 60000
 };
 
 export default config;

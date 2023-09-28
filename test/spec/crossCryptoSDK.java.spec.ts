@@ -22,14 +22,70 @@ import privateKey2048 from '../keys/java/kp_rsa2048/private_key.json';
 import publicKey2048 from '../keys/java/kp_rsa2048/public_key.json';
 import privateKey4096 from '../keys/java/kp_rsa4096/private_key.json';
 import publicKey4096 from '../keys/java/kp_rsa4096/public_key.json';
+import privateKey4096_2 from '../keys/java/kp_rsa4096_2/private_key.json';
+import publicKey4096_2 from '../keys/java/kp_rsa4096_2/public_key.json';
 
 const userPassword2048: string = 'Qwer1234!';
 const userPassword4096: string = 'Qwer1234!';
+const userPassword4096_2: string = 'Qwer1234!';
 
 const encryptedFileContentsB64: string = 'iZoZFAZekI+xyaI6Kirb/6PfGvjH0Gi5EPA5XU49OFt9wqdDsISEtvSKQ6ISgOZ+mso=';
 const plainFileContentsB64: string = 'VGVzdEFCQ0RFRkdIIDEyMwpUZXN0SUpLTE1OT1AgNDU2ClRlc3RRUlNUVVZXWCA3ODk=';
 
 describe('Cross Crypto SDK tests (Java)', () => {
+    describe('Async Decryption of private key', () => {
+        describe('with version RSA-2048 (A)', () => {
+            test('should return a PlainUserKeyPairContainer in correct format', async () => {
+                const userKeyPairContainer: UserKeyPairContainer = {
+                    privateKeyContainer: privateKey2048 as PrivateKeyContainer,
+                    publicKeyContainer: publicKey2048 as PublicKeyContainer
+                };
+
+                const plainUserKeyPairContainer: PlainUserKeyPairContainer = await Crypto.decryptPrivateKeyAsync(
+                    userKeyPairContainer,
+                    userPassword2048
+                );
+
+                expect(plainUserKeyPairContainer.privateKeyContainer.version).toBe(UserKeyPairVersion.RSA2048);
+                expect(plainUserKeyPairContainer.privateKeyContainer.privateKey).toContain('-----BEGIN RSA PRIVATE KEY-----');
+                expect(plainUserKeyPairContainer.privateKeyContainer.privateKey).toContain('-----END RSA PRIVATE KEY-----');
+            });
+        });
+        describe('with version RSA-4096', () => {
+            test('should return a PlainUserKeyPairContainer in correct format', async () => {
+                const userKeyPairContainer: UserKeyPairContainer = {
+                    privateKeyContainer: privateKey4096 as PrivateKeyContainer,
+                    publicKeyContainer: publicKey4096 as PublicKeyContainer
+                };
+
+                const plainUserKeyPairContainer: PlainUserKeyPairContainer = await Crypto.decryptPrivateKeyAsync(
+                    userKeyPairContainer,
+                    userPassword4096
+                );
+
+                expect(plainUserKeyPairContainer.privateKeyContainer.version).toBe(UserKeyPairVersion.RSA4096);
+                expect(plainUserKeyPairContainer.privateKeyContainer.privateKey).toContain('-----BEGIN RSA PRIVATE KEY-----');
+                expect(plainUserKeyPairContainer.privateKeyContainer.privateKey).toContain('-----END RSA PRIVATE KEY-----');
+            });
+        });
+        describe('with new version RSA-4096(2) (SHA-1, count=1.3e6)', () => {
+            test('should return a PlainUserKeyPairContainer in correct format', async () => {
+                const userKeyPairContainer: UserKeyPairContainer = {
+                    privateKeyContainer: privateKey4096_2 as PrivateKeyContainer,
+                    publicKeyContainer: publicKey4096_2 as PublicKeyContainer
+                };
+
+                const plainUserKeyPairContainer: PlainUserKeyPairContainer = await Crypto.decryptPrivateKeyAsync(
+                    userKeyPairContainer,
+                    userPassword4096_2
+                );
+
+                expect(plainUserKeyPairContainer.privateKeyContainer.version).toBe(UserKeyPairVersion.RSA4096);
+                expect(plainUserKeyPairContainer.privateKeyContainer.privateKey).toContain('-----BEGIN RSA PRIVATE KEY-----');
+                expect(plainUserKeyPairContainer.privateKeyContainer.privateKey).toContain('-----END RSA PRIVATE KEY-----');
+            });
+        });
+    });
     describe('Decryption of private key', () => {
         describe('with version RSA-2048 (A)', () => {
             test('should return a PlainUserKeyPairContainer in correct format', () => {
@@ -58,6 +114,23 @@ describe('Cross Crypto SDK tests (Java)', () => {
                 const plainUserKeyPairContainer: PlainUserKeyPairContainer = Crypto.decryptPrivateKey(
                     userKeyPairContainer,
                     userPassword4096
+                );
+
+                expect(plainUserKeyPairContainer.privateKeyContainer.version).toBe(UserKeyPairVersion.RSA4096);
+                expect(plainUserKeyPairContainer.privateKeyContainer.privateKey).toContain('-----BEGIN RSA PRIVATE KEY-----');
+                expect(plainUserKeyPairContainer.privateKeyContainer.privateKey).toContain('-----END RSA PRIVATE KEY-----');
+            });
+        });
+        describe('with new version RSA-4096(2) (SHA-1, count=1.3e6)', () => {
+            test('should return a PlainUserKeyPairContainer in correct format', () => {
+                const userKeyPairContainer: UserKeyPairContainer = {
+                    privateKeyContainer: privateKey4096_2 as PrivateKeyContainer,
+                    publicKeyContainer: publicKey4096_2 as PublicKeyContainer
+                };
+
+                const plainUserKeyPairContainer: PlainUserKeyPairContainer = Crypto.decryptPrivateKey(
+                    userKeyPairContainer,
+                    userPassword4096_2
                 );
 
                 expect(plainUserKeyPairContainer.privateKeyContainer.version).toBe(UserKeyPairVersion.RSA4096);
@@ -141,7 +214,7 @@ describe('Cross Crypto SDK tests (Java)', () => {
                 ...encryptedDataContainer2.getContent()
             ]);
             const encryptedStringB64: string = base64.fromByteArray(encryptedByteArray);
-            const tag: string = encryptedDataContainer2.getTag();
+            const tag: string | undefined = encryptedDataContainer2.getTag();
 
             expect(encryptedStringB64).toBe(encryptedFileContentsB64);
             expect(tag).toBe(plainFileKey2048.tag);

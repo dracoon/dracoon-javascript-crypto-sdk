@@ -8,8 +8,8 @@ import { Crypto, EncryptedDataContainer, PlainDataContainer, PlainFileKeyVersion
  * IMPORTANT: please call doFinal() to complete decryption BEFORE using the decrypted data!
  */
 
-const CHUNK_SIZE = 16;
-const DATA = new Uint8Array(16 * 16);
+const CHUNK_SIZE_BYTES = 16;
+const DATA = new Uint8Array(CHUNK_SIZE_BYTES ** 2);
 const USER_PASSWORD = 'Password1234!';
 
 /**
@@ -35,13 +35,13 @@ const performEncryptionDecryptionWorkflow = async () => {
     // Encrypt file key
     const encryptedFileKey = Crypto.encryptFileKey(plainFileKey, userKeyPair.publicKeyContainer);
     // Check password
-    const success = Crypto.checkUserKeyPair(userKeyPair, USER_PASSWORD);
+    const success = await Crypto.checkUserKeyPairAsync(userKeyPair, USER_PASSWORD);
     if (!success) {
         console.log('wrong password');
         return;
     }
     // Decrypt private key
-    const plainUserKeyPair = Crypto.decryptPrivateKey(userKeyPair, USER_PASSWORD);
+    const plainUserKeyPair = await Crypto.decryptPrivateKeyAsync(userKeyPair, USER_PASSWORD);
     // Decrypt file key
     const decryptedFileKey = Crypto.decryptFileKey(encryptedFileKey, plainUserKeyPair.privateKeyContainer);
 
@@ -60,8 +60,8 @@ const performEncryption = (plainFileKey, plainData) => {
 
     // Split up data into chunks
     const plainChunks = [];
-    for (let startIndex = 0; startIndex < plainData.length; startIndex += CHUNK_SIZE) {
-        const endIndex = startIndex + CHUNK_SIZE;
+    for (let startIndex = 0; startIndex < plainData.length; startIndex += CHUNK_SIZE_BYTES) {
+        const endIndex = startIndex + CHUNK_SIZE_BYTES;
         plainChunks.push(plainData.slice(startIndex, endIndex));
     }
 
@@ -94,8 +94,8 @@ const performDecryption = (plainFileKey, encryptedData) => {
 
     // Split up data into chunks
     const encryptedChunks = [];
-    for (let startIndex = 0; startIndex < encryptedData.length; startIndex += CHUNK_SIZE) {
-        const endIndex = startIndex + CHUNK_SIZE;
+    for (let startIndex = 0; startIndex < encryptedData.length; startIndex += CHUNK_SIZE_BYTES) {
+        const endIndex = startIndex + CHUNK_SIZE_BYTES;
         encryptedChunks.push(encryptedData.slice(startIndex, endIndex));
     }
 
