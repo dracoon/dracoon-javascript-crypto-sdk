@@ -1,7 +1,7 @@
 include:
   - project: 'dracoon/cicd/pipeline/pipeline-commons'
     file: 'pipeline-commons.yml'
-    ref: '2.0.0'
+    ref: '2.1.1'
 
 # --- GLOBAL SETTINGS / VARIABLES ---------------------------------------------
 
