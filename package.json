@@ -16,10 +16,10 @@
         "crypto",
         "sdk"
     ],
-    "main": "lib/bundle.js",
-    "types": "lib/index.d.ts",
+    "main": "dist/bundle.js",
+    "types": "dist/index.d.ts",
     "files": [
-        "lib/"
+        "dist/"
     ],
     "scripts": {
         "clean": "rm -rf dist lib",
