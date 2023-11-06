@@ -9,10 +9,14 @@ variables:
   NAME: dracoon-sdk-crypto-javascript
   JIRA_PROJECT_ID: SDKCRYPTJS
 
-  ENABLE_INTEGRATION_TESTING: 'false'
   ENABLE_ARTIFACT_PUBLISHING: 'true'
   ENABLE_PUBLIC_ARTIFACT_PUBLISHING: 'true'
   ENABLE_CONTAINER_IMAGES: 'false'
+
+integration-test-service:
+  stage: test
+  script:
+    - npm run integration-test:ci
 
 build-service:
   artifacts:

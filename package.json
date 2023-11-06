@@ -39,6 +39,13 @@
         "install:ci": "npm install --cache .npm --prefer-offline --no-audit",
         "build:ci": "rollup -c rollup.config.mjs",
         "test:ci": "jest --config=test/jest.config.ts",
+        "integration-test:browser": "mkdir -p  ./integration-tests/pkg && npm pack --pack-destination  ./integration-tests/pkg && (cd  ./integration-tests/browser && npm run integration-test)",
+        "integration-test:node": "mkdir -p  ./integration-tests/pkg && npm pack --pack-destination  ./integration-tests/pkg && (cd  ./integration-tests/node && npm run integration-test)",
+        "preintegration-test": "rm -rf integration-tests/pkg",
+        "integration-test": "npm run integration-test:browser && npm run integration-test:node",
+        "integration-test:ci:browser": "mkdir -p ${CI_PROJECT_DIR}/integration-tests/pkg && npm pack --pack-destination ${CI_PROJECT_DIR}/integration-tests/pkg && cd ${CI_PROJECT_DIR}/integration-tests/browser && npm run integration-test:ci",
+        "integration-test:ci:node": "mkdir -p ${CI_PROJECT_DIR}/integration-tests/pkg && npm pack --pack-destination ${CI_PROJECT_DIR}/integration-tests/pkg && cd ${CI_PROJECT_DIR}/integration-tests/node && npm run integration-test:ci",
+        "integration-test:ci": "npm run integration-test:ci:browser && npm run integration-test:ci:node",
         "format:ci": "prettier -c .",
         "publish:ci": "npm publish"
     },

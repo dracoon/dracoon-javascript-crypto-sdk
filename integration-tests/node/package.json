@@ -1,0 +1,15 @@
+{
+    "name": "node-integration-test",
+    "private": true,
+    "version": "1.0.0",
+    "description": "An integration test to verify that including the sdk in a nodeJS environment works.",
+    "author": "DRACOON",
+    "license": "Apache-2.0",
+    "main": "test/index.spec.js",
+    "scripts": {
+        "preintegration-test": "rm -rf ./dist",
+        "integration-test": "npm i ../pkg/$(ls ../pkg) && npm ci && node test/index.spec.js",
+        "postintegration-test": "npm uninstall @dracoon-official/crypto-sdk",
+        "integration-test:ci": "npm run integration-test"
+    }
+}

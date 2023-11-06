@@ -8,3 +8,4 @@ lib
 node_modules
 renovate.json
 .gitlab-ci.yml
+integration-tests/pipeline-configuration/pipeline-vars.yml
