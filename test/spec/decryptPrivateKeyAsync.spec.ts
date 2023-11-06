@@ -1,4 +1,4 @@
-import { Crypto } from '../../src/Crypto';
+import { Crypto } from '../../src/Crypto.node';
 import { UserKeyPairVersion } from '../../src/enums/UserKeyPairVersion';
 import { PlainUserKeyPairContainer } from '../../src/models/PlainUserKeyPairContainer';
 import { UserKeyPairContainer } from '../../src/models/UserKeyPairContainer';

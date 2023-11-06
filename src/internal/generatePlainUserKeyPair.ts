@@ -1,10 +1,10 @@
-import forge from 'node-forge';
+import { pki } from 'node-forge';
 import { UserKeyPairVersion } from '../enums/UserKeyPairVersion';
 import { InvalidVersionError } from '../error/models/InvalidVersionError';
 import { PlainUserKeyPairContainer } from '../models/PlainUserKeyPairContainer';
 
 const generatePlainUserKeyPair = (version: UserKeyPairVersion): Promise<PlainUserKeyPairContainer> => {
-    const options: forge.pki.rsa.GenerateKeyPairOptions = {};
+    const options: pki.rsa.GenerateKeyPairOptions = {};
     if (version === UserKeyPairVersion.RSA2048) {
         options.bits = 2048;
         options.e = 0x10001;
@@ -18,18 +18,18 @@ const generatePlainUserKeyPair = (version: UserKeyPairVersion): Promise<PlainUse
     }
 
     return new Promise((resolve, reject) => {
-        forge.pki.rsa.generateKeyPair(options, (err, keypair) => {
+        pki.rsa.generateKeyPair(options, (err, keypair) => {
             if (err) {
                 reject(err);
             } else {
                 const plainUserKeyPairContainer: PlainUserKeyPairContainer = {
                     privateKeyContainer: {
                         version: version,
-                        privateKey: forge.pki.privateKeyToPem(keypair.privateKey)
+                        privateKey: pki.privateKeyToPem(keypair.privateKey)
                     },
                     publicKeyContainer: {
                         version: version,
-                        publicKey: forge.pki.publicKeyToPem(keypair.publicKey)
+                        publicKey: pki.publicKeyToPem(keypair.publicKey)
                     }
                 };
                 resolve(plainUserKeyPairContainer);

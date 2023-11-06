@@ -1,4 +1,4 @@
-import { Crypto } from '../../src/index';
+import { Crypto } from '../../src/index.node';
 import { FileEncryptionCipher } from '../../src/FileEncryptionCipher';
 import { PlainFileKey } from '../../src/models/PlainFileKey';
 

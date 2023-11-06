@@ -1,4 +1,3 @@
-import { Crypto } from './Crypto';
 import { EncryptedDataContainer } from './EncryptedDataContainer';
 import { PlainDataContainer } from './PlainDataContainer';
 import { FileKeyVersion } from './enums/FileKeyVersion';
@@ -14,7 +13,6 @@ import { InvalidVersionError } from './error/models/InvalidVersionError';
 import { VersionMismatchError } from './error/models/VersionMismatchError';
 
 export {
-    Crypto,
     EncryptedDataContainer,
     PlainDataContainer,
     FileKeyVersion,

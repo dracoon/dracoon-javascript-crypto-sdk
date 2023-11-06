@@ -1,5 +1,5 @@
 import base64 from 'base64-js';
-import { Crypto } from '../../src/index';
+import { Crypto } from '../../src/index.node';
 import { PlainFileKeyVersion } from '../../src/enums/PlainFileKeyVersion';
 import { PlainFileKey } from '../../src/models/PlainFileKey';
 

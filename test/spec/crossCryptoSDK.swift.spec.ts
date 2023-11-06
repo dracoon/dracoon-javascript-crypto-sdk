@@ -1,5 +1,5 @@
 import base64 from 'base64-js';
-import { Crypto } from '../../src/index';
+import { Crypto } from '../../src/index.node';
 import { EncryptedDataContainer } from '../../src/EncryptedDataContainer';
 import { FileDecryptionCipher } from '../../src/FileDecryptionCipher';
 import { FileEncryptionCipher } from '../../src/FileEncryptionCipher';

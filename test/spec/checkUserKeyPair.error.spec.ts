@@ -1,4 +1,4 @@
-import { Crypto } from '../../src/index';
+import { Crypto } from '../../src/index.node';
 import { InvalidArgumentError } from '../../src/error/models/InvalidArgumentError';
 import { InvalidKeyPairError } from '../../src/error/models/InvalidKeyPairError';
 import { PrivateKeyContainer } from '../../src/models/PrivateKeyContainer';

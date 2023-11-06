@@ -8,8 +8,31 @@ include:
 variables:
   NAME: dracoon-sdk-crypto-javascript
   JIRA_PROJECT_ID: SDKCRYPTJS
-  
+
   ENABLE_INTEGRATION_TESTING: 'false'
   ENABLE_ARTIFACT_PUBLISHING: 'true'
   ENABLE_PUBLIC_ARTIFACT_PUBLISHING: 'true'
   ENABLE_CONTAINER_IMAGES: 'false'
+
+build-service:
+  artifacts:
+    paths:
+      - lib/
+
+.dev-workflow:
+  job-rules:
+    publish-service:
+      # hotfix branch should be manual
+      - if: $PIPELINE_TRIGGER == "branch" && 
+            $PIPELINE_CONTEXT == "release" && 
+            $CI_COMMIT_BRANCH =~ /^release\/\d+\.\d+\.[^0]\d*$/
+        when: manual
+      # release branch should be automatic
+      - if: $PIPELINE_TRIGGER == "branch" &&
+            $PIPELINE_CONTEXT =~ /^(release|snapshot)$/
+      # other branch should be optional manual
+      - if: ($PIPELINE_TRIGGER == "mr" &&
+            $PIPELINE_CONTEXT != "renovate") ||
+            $PIPELINE_CONTEXT == "default"
+        when: manual
+        allow_failure: true

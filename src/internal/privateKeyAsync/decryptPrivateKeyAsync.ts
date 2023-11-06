@@ -3,7 +3,7 @@ import { NotSupportedError } from '../../error/models/NotSupportedError';
 import { PlainUserKeyPairContainer } from '../../models/PlainUserKeyPairContainer';
 import { UserKeyPairContainer } from '../../models/UserKeyPairContainer';
 import { deriveKey } from './deriveKey';
-import { getCryptoWorker } from './getCryptoWorker';
+import { getCryptoWorker } from '../cryptoWorker';
 import { CipherByteLengthMap, PrfToHashAlg } from './maps';
 import { DecryptionParams, EncryptPrivateKeyParams, SupportedCipher, SupportedPrf, ValidKeyByteLength, ValidKeyLength } from './models';
 import { arrayBufferAsString, stringAsArrayBuffer } from './utils';

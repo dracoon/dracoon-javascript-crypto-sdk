@@ -9,6 +9,7 @@
         "declarationMap": false,
         "sourceMap": false,
         "outDir": "lib",
+        "declarationDir": "lib",
 
         /* Strict Type-Checking Options */
         "strict": true,

@@ -1,6 +1,6 @@
-import forge from 'node-forge';
+import { Base64 } from 'node-forge';
 import base64 from 'base64-js';
-import { Crypto } from '../../src/index';
+import { Crypto } from '../../src/index.node';
 import { PlainFileKeyVersion } from '../../src/enums/PlainFileKeyVersion';
 import { FileKey } from '../../src/models/FileKey';
 import { PlainFileKey } from '../../src/models/PlainFileKey';
@@ -58,7 +58,7 @@ describe('Function: Crypto.decryptFileKey', () => {
         });
         test('should return a PlainFileKey with a 128 bit tag base64 encoded', () => {
             const plainFileKey: PlainFileKey = Crypto.decryptFileKey(testContext.fileKey, testContext.privateKeyContainer);
-            const bitLength: number = base64.byteLength(plainFileKey.tag as forge.Base64) * 8;
+            const bitLength: number = base64.byteLength(plainFileKey.tag as Base64) * 8;
 
             expect(bitLength).toBe(128);
         });
@@ -100,7 +100,7 @@ describe('Function: Crypto.decryptFileKey', () => {
         });
         test('should return a PlainFileKey with a 128 bit tag base64 encoded', () => {
             const plainFileKey: PlainFileKey = Crypto.decryptFileKey(testContext.fileKey, testContext.privateKeyContainer);
-            const bitLength: number = base64.byteLength(plainFileKey.tag as forge.Base64) * 8;
+            const bitLength: number = base64.byteLength(plainFileKey.tag as Base64) * 8;
 
             expect(bitLength).toBe(128);
         });

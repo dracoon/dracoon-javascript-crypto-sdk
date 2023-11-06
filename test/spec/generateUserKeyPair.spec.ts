@@ -1,6 +1,6 @@
-import forge from 'node-forge';
-import { Crypto } from '../../src/index';
+import { pki } from 'node-forge';
 import { UserKeyPairVersion } from '../../src/enums/UserKeyPairVersion';
+import { Crypto } from '../../src/index.node';
 import { UserKeyPairContainer } from '../../src/models/UserKeyPairContainer';
 
 type Context = {
@@ -39,8 +39,8 @@ describe('Function: Crypto.generateUserKeyPair', () => {
             expect(userKeyPairContainer.publicKeyContainer.publicKey).toContain('-----END PUBLIC KEY-----');
         });
         test('should return a UserKeyPairContainer with a public key with a modulus of 2048 bit', () => {
-            const publicKeyPEM: forge.pki.PEM = userKeyPairContainer.publicKeyContainer.publicKey;
-            const publicKey: forge.pki.PublicKey = forge.pki.publicKeyFromPem(publicKeyPEM);
+            const publicKeyPEM: pki.PEM = userKeyPairContainer.publicKeyContainer.publicKey;
+            const publicKey: pki.PublicKey = pki.publicKeyFromPem(publicKeyPEM);
             const publicKeyModulus = publicKey.n as any;
             const publicKeyModulusBitLength = publicKeyModulus.bitLength() as number;
 
@@ -77,8 +77,8 @@ describe('Function: Crypto.generateUserKeyPair', () => {
             expect(userKeyPairContainer.publicKeyContainer.publicKey).toContain('-----END PUBLIC KEY-----');
         });
         test('should return a UserKeyPairContainer with a public key with a modulus of 4096 bit', () => {
-            const publicKeyPEM: forge.pki.PEM = userKeyPairContainer.publicKeyContainer.publicKey;
-            const publicKey: forge.pki.PublicKey = forge.pki.publicKeyFromPem(publicKeyPEM);
+            const publicKeyPEM: pki.PEM = userKeyPairContainer.publicKeyContainer.publicKey;
+            const publicKey: pki.PublicKey = pki.publicKeyFromPem(publicKeyPEM);
             const publicKeyModulus = publicKey.n as any;
             const publicKeyModulusBitLength = publicKeyModulus.bitLength() as number;
 

@@ -1,4 +1,4 @@
-import { Crypto } from '../../src/index';
+import { Crypto } from '../../src/index.node';
 import { EncryptionError } from '../../src/error/models/EncryptionError';
 import { InvalidArgumentError } from '../../src/error/models/InvalidArgumentError';
 import { InvalidFileKeyError } from '../../src/error/models/InvalidFileKeyError';

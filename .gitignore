@@ -9,3 +9,4 @@ scripts/*
 !scripts/keygenerator.js
 **/*.tgz
 odc.log
+.DS_STORE

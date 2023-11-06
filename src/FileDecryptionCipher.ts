@@ -1,4 +1,4 @@
-import forge from 'node-forge';
+import { util, cipher } from 'node-forge';
 import { EncryptedDataContainer } from './EncryptedDataContainer';
 import { PlainDataContainer } from './PlainDataContainer';
 import { PlainFileKeyVersion } from './enums/PlainFileKeyVersion';
@@ -8,7 +8,7 @@ import { InvalidArgumentError } from './error/models/InvalidArgumentError';
 import { PlainFileKey } from './models/PlainFileKey';
 
 export class FileDecryptionCipher {
-    private readonly cipher: forge.cipher.BlockCipher;
+    private readonly cipher: cipher.BlockCipher;
 
     /**
      * Initializes a new FileDecryptionCipher, which can be used to decrypt data in chunks.
@@ -17,11 +17,11 @@ export class FileDecryptionCipher {
      */
     public constructor(plainFileKey: PlainFileKey) {
         if (plainFileKey.version === PlainFileKeyVersion.AES256GCM && plainFileKey.tag) {
-            const decodedKey: string = forge.util.decode64(plainFileKey.key);
-            const decodedIv: string = forge.util.decode64(plainFileKey.iv);
-            const decodedTag: string = forge.util.decode64(plainFileKey.tag);
-            const tag: forge.util.ByteStringBuffer = forge.util.createBuffer(decodedTag);
-            this.cipher = forge.cipher.createDecipher('AES-GCM', decodedKey);
+            const decodedKey: string = util.decode64(plainFileKey.key);
+            const decodedIv: string = util.decode64(plainFileKey.iv);
+            const decodedTag: string = util.decode64(plainFileKey.tag);
+            const tag: util.ByteStringBuffer = util.createBuffer(decodedTag);
+            this.cipher = cipher.createDecipher('AES-GCM', decodedKey);
             this.cipher.start({
                 iv: decodedIv,
                 tagLength: 128,
@@ -45,11 +45,11 @@ export class FileDecryptionCipher {
             throw new InvalidArgumentError();
         }
 
-        const byteStringBuffer: forge.util.ByteStringBuffer = forge.util.createBuffer(encryptedDataContainer.getContent(), 'raw');
+        const byteStringBuffer: util.ByteStringBuffer = util.createBuffer(encryptedDataContainer.getContent(), 'raw');
         this.cipher.update(byteStringBuffer);
 
         const decryptedBytes: string = this.cipher.output.getBytes();
-        const decryptedByteArray: Uint8Array = forge.util.binary.raw.decode(decryptedBytes);
+        const decryptedByteArray: Uint8Array = util.binary.raw.decode(decryptedBytes);
 
         return new PlainDataContainer(decryptedByteArray);
     }
@@ -69,7 +69,7 @@ export class FileDecryptionCipher {
         }
 
         const decryptedBytes: string = this.cipher.output.getBytes();
-        const decryptedByteArray: Uint8Array = forge.util.binary.raw.decode(decryptedBytes);
+        const decryptedByteArray: Uint8Array = util.binary.raw.decode(decryptedBytes);
 
         return new PlainDataContainer(decryptedByteArray);
     }

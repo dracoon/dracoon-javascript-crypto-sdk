@@ -1,4 +1,4 @@
-import { Crypto } from '../../src/index';
+import { Crypto } from '../../src/index.node';
 import { UserKeyPairVersion } from '../../src/enums/UserKeyPairVersion';
 import { InvalidArgumentError } from '../../src/error/models/InvalidArgumentError';
 import { InvalidVersionError } from '../../src/error/models/InvalidVersionError';

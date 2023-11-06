@@ -1,7 +1,7 @@
-import { Crypto } from '../../src/Crypto';
+import { Crypto } from '../../src/Crypto.node';
 import { UserKeyPairVersion } from '../../src/enums/UserKeyPairVersion';
 import { encryptRsaPrivateKeyAsync } from '../../src/internal/privateKeyAsync/encryptPrivateKeyAsync';
-import { getCryptoWorker } from '../../src/internal/privateKeyAsync/getCryptoWorker';
+import { getCryptoWorker } from '../../src/internal/cryptoWorker';
 import { SupportedCipherType, SupportedHashAlgorithm, ValidKeyLength } from '../../src/internal/privateKeyAsync/models';
 import { PrivateKeyContainer } from '../../src/models/PrivateKeyContainer';
 import { PublicKeyContainer } from '../../src/models/PublicKeyContainer';

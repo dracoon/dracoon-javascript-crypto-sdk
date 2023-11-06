@@ -1,5 +1,5 @@
 import { UserKeyPairVersion } from '../../src/enums/UserKeyPairVersion';
-import { Crypto } from '../../src/index';
+import { Crypto } from '../../src/index.node';
 import { PlainUserKeyPairContainer } from '../../src/models/PlainUserKeyPairContainer';
 import { PrivateKeyContainer } from '../../src/models/PrivateKeyContainer';
 import { PublicKeyContainer } from '../../src/models/PublicKeyContainer';

@@ -2,7 +2,7 @@ import { asn1, pki, util } from 'node-forge';
 import { PlainUserKeyPairContainer } from '../../models/PlainUserKeyPairContainer';
 import { UserKeyPairContainer } from '../../models/UserKeyPairContainer';
 import { deriveKey } from './deriveKey';
-import { getCryptoWorker } from './getCryptoWorker';
+import { getCryptoWorker } from '../cryptoWorker';
 import { HashAlgToPrf } from './maps';
 import { EncryptPrivateKeyConfig, EncryptPrivateKeyParams, SupportedPrf, ValidKeyByteLength } from './models';
 import { arrayBufferAsString, stringAsArrayBuffer } from './utils';

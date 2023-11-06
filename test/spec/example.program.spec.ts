@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Crypto, EncryptedDataContainer, PlainDataContainer, PlainFileKeyVersion, UserKeyPairVersion } from '../../src/index';
+import { Crypto, EncryptedDataContainer, PlainDataContainer, PlainFileKeyVersion, UserKeyPairVersion } from '../../src/index.node';
 
 describe('Example program', () => {
     test('Example program should run', async () => {

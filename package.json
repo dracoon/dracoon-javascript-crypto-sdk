@@ -16,21 +16,28 @@
         "crypto",
         "sdk"
     ],
-    "main": "dist/bundle.js",
-    "types": "dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./lib/index.default.d.ts",
+            "node": "./lib/node/cjs/bundle.js",
+            "default": "./lib/browser/cjs/bundle.js"
+        }
+    },
+    "main": "./lib/browser/cjs/bundle.js",
+    "types": "./lib/index.default.d.ts",
     "files": [
-        "dist/"
+        "./lib"
     ],
     "scripts": {
         "clean": "rm -rf dist lib",
-        "build": "npm run clean && rollup -c rollup.config.js",
+        "build": "npm run clean && rollup -c rollup.config.mjs",
         "prettier:check": "prettier -c .",
         "prettier:fix": "prettier -w .",
         "eslint:check": "eslint .",
         "eslint:fix": "eslint . --fix",
         "test": "jest --config=test/jest.config.ts",
         "install:ci": "npm install --cache .npm --prefer-offline --no-audit",
-        "build:ci": "rollup -c rollup.config.js",
+        "build:ci": "rollup -c rollup.config.mjs",
         "test:ci": "jest --config=test/jest.config.ts",
         "format:ci": "prettier -c .",
         "publish:ci": "npm publish"
@@ -39,8 +46,8 @@
         "node-forge": "^1.3.1"
     },
     "devDependencies": {
-        "@rollup/plugin-commonjs": "^22.0.2",
-        "@rollup/plugin-node-resolve": "^14.0.0",
+        "@rollup/plugin-commonjs": "^25.0.7",
+        "@rollup/plugin-node-resolve": "^15.2.3",
         "@types/base64-js": "^1.3.0",
         "@types/jest": "^28.0.0",
         "@types/node": "^16.0.0",
@@ -53,8 +60,8 @@
         "husky": "^8.0.1",
         "jest": "^28.0.0",
         "prettier": "^2.7.1",
-        "rollup": "^2.79.0",
-        "rollup-plugin-typescript2": "^0.33.0",
+        "rollup": "^4.2.0",
+        "rollup-plugin-typescript2": "^0.36.0",
         "ts-jest": "^28.0.0",
         "ts-node": "^10.9.1",
         "typescript": "~4.8.2"

@@ -1,11 +1,11 @@
+import { webcrypto } from 'crypto';
 import { decryptRsaPrivateKeyAsync } from '../../src/internal/privateKeyAsync/decryptPrivateKeyAsync';
 import { encryptRsaPrivateKeyAsync } from '../../src/internal/privateKeyAsync/encryptPrivateKeyAsync';
-import { getCryptoWorker } from '../../src/internal/privateKeyAsync/getCryptoWorker';
 import { SupportedCipherType, SupportedHashAlgorithm, ValidKeyLength } from '../../src/internal/privateKeyAsync/models';
 import keypair_4096_2 from '../keys/javascript/kp_rsa4096_2/kp_rsa4096_2.json';
 
 describe('Roundtrip: Crypto.encryptPrivateKeyAsync -> Crypto.decryptPrivateKeyAsync', () => {
-    const crypto: Crypto = getCryptoWorker();
+    const crypto: Crypto = webcrypto as unknown as Crypto;
     const { algorithm, password } = keypair_4096_2.config;
     const plainPrivateKey: string = keypair_4096_2.plainUserKeyPairContainer.privateKeyContainer.privateKey;
 

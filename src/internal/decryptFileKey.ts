@@ -1,4 +1,4 @@
-import forge from 'node-forge';
+import { Bytes, md, pki, util } from 'node-forge';
 import { PlainFileKeyVersion } from '../enums/PlainFileKeyVersion';
 import { UserKeyPairVersion } from '../enums/UserKeyPairVersion';
 import { InvalidFileKeyError } from '../error/models/InvalidFileKeyError';
@@ -21,29 +21,29 @@ const decryptFileKey = (
         fileKey.version
     );
 
-    const privateKey: forge.pki.rsa.PrivateKey = forge.pki.privateKeyFromPem(privateKeyContainer.privateKey);
-    const keyBytes: forge.Bytes = forge.util.decode64(fileKey.key);
+    const privateKey: pki.rsa.PrivateKey = pki.privateKeyFromPem(privateKeyContainer.privateKey);
+    const keyBytes: Bytes = util.decode64(fileKey.key);
 
-    let decKeyBytes: forge.Bytes = '';
+    let decKeyBytes: Bytes = '';
     if (privateKeyContainer.version === UserKeyPairVersion.RSA2048) {
         decKeyBytes = privateKey.decrypt(keyBytes, 'RSA-OAEP', {
-            md: forge.md.sha256.create(),
+            md: md.sha256.create(),
             mgf1: {
-                md: forge.md.sha1.create()
+                md: md.sha1.create()
             }
         });
     } else if (privateKeyContainer.version === UserKeyPairVersion.RSA4096) {
         decKeyBytes = privateKey.decrypt(keyBytes, 'RSA-OAEP', {
-            md: forge.md.sha256.create(),
+            md: md.sha256.create(),
             mgf1: {
-                md: forge.md.sha256.create()
+                md: md.sha256.create()
             }
         });
     }
 
     return {
         version: plainFileKeyVersion,
-        key: forge.util.encode64(decKeyBytes),
+        key: util.encode64(decKeyBytes),
         iv: fileKey.iv,
         tag: fileKey.tag
     };

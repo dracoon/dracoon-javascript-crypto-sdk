@@ -1,4 +1,4 @@
-import { Crypto } from '../../src/index';
+import { Crypto } from '../../src/index.node';
 import { PrivateKeyContainer } from '../../src/models/PrivateKeyContainer';
 import { PublicKeyContainer } from '../../src/models/PublicKeyContainer';
 import { UserKeyPairContainer } from '../../src/models/UserKeyPairContainer';
