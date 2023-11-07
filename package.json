@@ -1,6 +1,6 @@
 {
     "name": "@dracoon-official/crypto-sdk",
-    "version": "1.7.0",
+    "version": "1.8.0",
     "description": "The official Dracoon Crypto SDK for JavaScript",
     "license": "Apache-2.0",
     "author": "DRACOON",
