@@ -7,11 +7,26 @@
         "project": "./tsconfig.json"
     },
     "plugins": ["@typescript-eslint"],
-    "extends": [
-        "eslint:recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:@typescript-eslint/recommended-requiring-type-checking",
-        "prettier"
+    "overrides": [
+        {
+            "files": ["*.ts", "*.tsx"],
+            "extends": [
+                "eslint:recommended",
+                "plugin:@typescript-eslint/recommended",
+                "plugin:@typescript-eslint/recommended-requiring-type-checking",
+                "prettier"
+            ],
+            "rules": {
+                "@typescript-eslint/no-inferrable-types": "off",
+                "@typescript-eslint/explicit-function-return-type": "error",
+                "@typescript-eslint/explicit-member-accessibility": "error"
+            }
+        },
+        {
+            "files": ["*.js", "*.jsx"],
+            "extends": ["eslint:recommended", "prettier"],
+            "rules": {}
+        }
     ],
     "env": {
         "browser": true,
@@ -19,10 +34,5 @@
         "es2020": true,
         "jasmine": true
     },
-    "globals": {},
-    "rules": {
-        "@typescript-eslint/no-inferrable-types": "off",
-        "@typescript-eslint/explicit-function-return-type": "error",
-        "@typescript-eslint/explicit-member-accessibility": "error"
-    }
+    "globals": {}
 }

@@ -1,5 +1,5 @@
 {
-    "include": ["src"],
+    "include": ["src", "integration-tests"],
     "compilerOptions": {
         /* Basic Options */
         "target": "ES2015",

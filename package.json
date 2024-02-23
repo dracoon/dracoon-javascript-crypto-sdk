@@ -46,7 +46,7 @@
         "integration-test:ci:browser": "mkdir -p ${CI_PROJECT_DIR}/integration-tests/pkg && npm pack --pack-destination ${CI_PROJECT_DIR}/integration-tests/pkg && cd ${CI_PROJECT_DIR}/integration-tests/browser && npm run integration-test:ci",
         "integration-test:ci:node": "mkdir -p ${CI_PROJECT_DIR}/integration-tests/pkg && npm pack --pack-destination ${CI_PROJECT_DIR}/integration-tests/pkg && cd ${CI_PROJECT_DIR}/integration-tests/node && npm run integration-test:ci",
         "integration-test:ci": "npm run integration-test:ci:browser && npm run integration-test:ci:node",
-        "format:ci": "prettier -c .",
+        "lint:ci": "npm run eslint:check",
         "publish:ci": "npm publish"
     },
     "dependencies": {

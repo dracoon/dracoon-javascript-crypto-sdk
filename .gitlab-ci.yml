@@ -1,13 +1,15 @@
 include:
   - project: 'dracoon/cicd/pipeline/pipeline-commons'
     file: 'pipeline-commons.yml'
-    ref: '2.1.1'
+    ref: '2.5.4'
 
 # --- GLOBAL SETTINGS / VARIABLES ---------------------------------------------
 
 variables:
   NAME: dracoon-sdk-crypto-javascript
   JIRA_PROJECT_ID: SDKCRYPTJS
+
+  NODE_VERSION: 20.11.1
 
   ENABLE_ARTIFACT_PUBLISHING: 'true'
   ENABLE_PUBLIC_ARTIFACT_PUBLISHING: 'true'
