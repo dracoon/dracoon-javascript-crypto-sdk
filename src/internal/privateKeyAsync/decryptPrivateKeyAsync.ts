@@ -6,14 +6,15 @@ import { deriveKey } from './deriveKey';
 import { getCryptoWorker } from '../cryptoWorker';
 import { CipherByteLengthMap, PrfToHashAlg } from './maps';
 import { DecryptionParams, EncryptPrivateKeyParams, SupportedCipher, SupportedPrf, ValidKeyByteLength, ValidKeyLength } from './models';
-import { arrayBufferAsString, stringAsArrayBuffer } from './utils';
+import { Utils } from './utils';
 import {
     EncryptedPrivateKeyCapture,
+    encryptedPrivateKeyValidator,
     PBES2AlgorithmsCapture,
     PBES2AlgorithmsValidator,
-    encryptedPrivateKeyValidator,
     validate
 } from './validator';
+import { Encoding } from '../../models/Encoding.enum';
 
 export async function decryptPrivateKeyAsync(
     userKeyPairContainer: UserKeyPairContainer,
@@ -74,26 +75,26 @@ async function decryptPrivateKeyInfo(obj: asn1.Asn1, password: string, cryptoWor
 
     const decryptionParams: DecryptionParams = getDecryptionParams(oid, capture.encryptionParams);
 
-    const encryptedDataView: Uint8Array = stringAsArrayBuffer(capture.encryptedData);
+    const encryptedDataView: Uint8Array = Utils.stringAsArrayBuffer(capture.encryptedData);
 
     const decryptedData: ArrayBuffer = await deriveKeyAndDecrypt(
         {
             contentEncryptionAlgorithm: {
                 name: 'AES-CBC',
                 length: (decryptionParams.derivedKeyLengthBytes * 8) as ValidKeyLength,
-                iv: stringAsArrayBuffer(decryptionParams.iv)
+                iv: Utils.stringAsArrayBuffer(decryptionParams.iv)
             },
             hashingParams: {
                 hmacHashAlgorithm: PrfToHashAlg[decryptionParams.hashAlgorithm],
                 iterationCount: decryptionParams.iterationCount,
-                salt: stringAsArrayBuffer(decryptionParams.salt)
+                salt: Utils.stringAsArrayBuffer(decryptionParams.salt)
             },
             password,
             contentToEncrypt: encryptedDataView
         },
         cryptoWorker
     );
-    const asn1Data: asn1.Asn1 = asn1.fromDer(arrayBufferAsString(decryptedData));
+    const asn1Data: asn1.Asn1 = asn1.fromDer(Utils.arrayBufferAsString(decryptedData));
 
     return asn1Data;
 }
@@ -152,6 +153,22 @@ function prfOidToHashAlgorithm(prfOid?: string): SupportedPrf {
 }
 
 async function deriveKeyAndDecrypt(parameters: EncryptPrivateKeyParams, cryptoWorker: Crypto): Promise<ArrayBuffer> {
-    const derivedKey: CryptoKey = await deriveKey(parameters, cryptoWorker);
-    return cryptoWorker.subtle.decrypt(parameters.contentEncryptionAlgorithm, derivedKey, parameters.contentToEncrypt);
+    let resolvedArrayBuffer: ArrayBuffer;
+    try {
+        const derivedKey: CryptoKey = await deriveKey(parameters, cryptoWorker);
+        resolvedArrayBuffer = await getResolverArrayBuffer(parameters, cryptoWorker, derivedKey);
+    } catch (e) {
+        const derivedKey: CryptoKey = await deriveKey(parameters, cryptoWorker, Encoding.ISO8859);
+        resolvedArrayBuffer = await getResolverArrayBuffer(parameters, cryptoWorker, derivedKey);
+    }
+
+    return resolvedArrayBuffer;
+}
+
+async function getResolverArrayBuffer(
+    parameters: EncryptPrivateKeyParams,
+    cryptoWorker: Crypto,
+    derivedKey: CryptoKey
+): Promise<ArrayBuffer> {
+    return await cryptoWorker.subtle.decrypt(parameters.contentEncryptionAlgorithm, derivedKey, parameters.contentToEncrypt);
 }

@@ -10,6 +10,11 @@ import plainPrivateKey2048 from '../keys/javascript/kp_rsa2048/plain_private_key
 import privateKey2048 from '../keys/javascript/kp_rsa2048/private_key.json';
 import publicKey2048 from '../keys/javascript/kp_rsa2048/public_key.json';
 
+//import keyPairs with Umlaute
+import keypair_2048_old from '../keys/javascript/kp_rsa2048_old/kp_rsa2048_old.json';
+import keypair_4096_old from '../keys/javascript/kp_rsa4096_old/kp_rsa4096_old.json';
+import { Utils } from '../../src/internal/privateKeyAsync/utils';
+
 describe('Function: Crypto.decryptPrivateKeyAsync', () => {
     describe('with keypair version RSA-2048 (A)', () => {
         let testContext: { userKeyPairContainer: UserKeyPairContainer; password: string };
@@ -73,6 +78,19 @@ describe('Function: Crypto.decryptPrivateKeyAsync', () => {
 
             expect(plainUserKeyPairContainer.privateKeyContainer.privateKey).toBe(plainPrivateKey2048.privateKey);
         });
+
+        test('should fall back to encoding in ISO-8859-1 and return a PlainUserKeyPairContainer with the correct plain private key', async () => {
+            const encodeSpy = jest.spyOn(Utils, 'encodeISO');
+            const plainUserKeyPairContainer: PlainUserKeyPairContainer = await Crypto.decryptPrivateKeyAsync(
+                keypair_2048_old.encryptedUserKeyPairContainer as UserKeyPairContainer,
+                keypair_2048_old.config.password
+            );
+
+            expect(encodeSpy).toHaveBeenCalled();
+            expect(plainUserKeyPairContainer.privateKeyContainer.privateKey).toBe(
+                keypair_2048_old.plainUserKeyPairContainer.privateKeyContainer.privateKey
+            );
+        });
     });
 
     describe('with keypair version RSA-4096', () => {
@@ -127,6 +145,18 @@ describe('Function: Crypto.decryptPrivateKeyAsync', () => {
 
             expect(plainUserKeyPairContainer.privateKeyContainer.privateKey).toBe(
                 keypair_4096_2.plainUserKeyPairContainer.privateKeyContainer.privateKey
+            );
+        });
+        test('should fall back to encoding in ISO-8859-1 and return a PlainUserKeyPairContainer with the correct plain private key', async () => {
+            const encodeSpy = jest.spyOn(Utils, 'encodeISO');
+            const plainUserKeyPairContainer: PlainUserKeyPairContainer = await Crypto.decryptPrivateKeyAsync(
+                keypair_4096_old.encryptedUserKeyPairContainer as UserKeyPairContainer,
+                keypair_4096_old.config.password
+            );
+
+            expect(encodeSpy).toHaveBeenCalled();
+            expect(plainUserKeyPairContainer.privateKeyContainer.privateKey).toBe(
+                keypair_4096_old.plainUserKeyPairContainer.privateKeyContainer.privateKey
             );
         });
     });

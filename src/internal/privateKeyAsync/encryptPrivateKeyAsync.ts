@@ -5,7 +5,7 @@ import { deriveKey } from './deriveKey';
 import { getCryptoWorker } from '../cryptoWorker';
 import { HashAlgToPrf } from './maps';
 import { EncryptPrivateKeyConfig, EncryptPrivateKeyParams, SupportedPrf, ValidKeyByteLength } from './models';
-import { arrayBufferAsString, stringAsArrayBuffer } from './utils';
+import { Utils } from './utils';
 
 declare module 'node-forge' {
     // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -73,7 +73,7 @@ export async function encryptRsaPrivateKeyAsync(
 ): Promise<string> {
     const { encryptParams: encryptConfig, hashingParams: hashingConfig } = encryptionConfig;
 
-    const contentToEncrypt: Uint8Array = stringAsArrayBuffer(
+    const contentToEncrypt: Uint8Array = Utils.stringAsArrayBuffer(
         asn1.toDer(pki.wrapRsaPrivateKey(pki.privateKeyToAsn1(pki.privateKeyFromPem(pem)))).getBytes()
     );
 
@@ -105,7 +105,7 @@ function buildPEM(
     encryptedData: ArrayBuffer
 ): pki.PEM {
     const pbkdf2Params: Pbkdf2ParamsAsn1 = createPbkdf2Params(
-        arrayBufferAsString(hashingParams.salt),
+        Utils.arrayBufferAsString(hashingParams.salt),
         asn1.integerToDer(hashingParams.iterationCount),
         encryptionKeyBytes,
         HashAlgToPrf[hashingParams.hmacHashAlgorithm]
@@ -165,7 +165,7 @@ function createAlgorithmAsn(params: Pbkdf2ParamsAsn1, encOid: string, iv: Uint8A
             asn1.create(asn1.Class.UNIVERSAL, asn1.Type.SEQUENCE, true, [
                 asn1.create(asn1.Class.UNIVERSAL, asn1.Type.OID, false, asn1.oidToDer(encOid).getBytes()),
                 // iv
-                asn1.create(asn1.Class.UNIVERSAL, asn1.Type.OCTETSTRING, false, arrayBufferAsString(iv))
+                asn1.create(asn1.Class.UNIVERSAL, asn1.Type.OCTETSTRING, false, Utils.arrayBufferAsString(iv))
             ])
         ])
     ]) as AlgorithmAsn1;
@@ -177,6 +177,6 @@ function createEncryptedPrivateKeyInfoAsn1(encryptionAlgorithm: AlgorithmAsn1, e
         // encryptionAlgorithm
         encryptionAlgorithm,
         // encryptedData
-        asn1.create(asn1.Class.UNIVERSAL, asn1.Type.OCTETSTRING, false, arrayBufferAsString(encryptedData))
+        asn1.create(asn1.Class.UNIVERSAL, asn1.Type.OCTETSTRING, false, Utils.arrayBufferAsString(encryptedData))
     ]) as EncryptedPrivateKeyInfoAsn1;
 }
