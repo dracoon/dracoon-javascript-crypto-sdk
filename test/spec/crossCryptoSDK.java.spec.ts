@@ -1,11 +1,11 @@
 import base64 from 'base64-js';
-import { Crypto } from '../../src/index.node';
 import { EncryptedDataContainer } from '../../src/EncryptedDataContainer';
 import { FileDecryptionCipher } from '../../src/FileDecryptionCipher';
 import { FileEncryptionCipher } from '../../src/FileEncryptionCipher';
 import { PlainDataContainer } from '../../src/PlainDataContainer';
 import { PlainFileKeyVersion } from '../../src/enums/PlainFileKeyVersion';
 import { UserKeyPairVersion } from '../../src/enums/UserKeyPairVersion';
+import { Crypto, DecryptionError } from '../../src/index.node';
 import { FileKey } from '../../src/models/FileKey';
 import { PlainFileKey } from '../../src/models/PlainFileKey';
 import { PlainUserKeyPairContainer } from '../../src/models/PlainUserKeyPairContainer';
@@ -25,9 +25,17 @@ import publicKey4096 from '../keys/java/kp_rsa4096/public_key.json';
 import privateKey4096_2 from '../keys/java/kp_rsa4096_2/private_key.json';
 import publicKey4096_2 from '../keys/java/kp_rsa4096_2/public_key.json';
 
+// Java crypto sdk keys with special characters
+import privateKey4096_emote from '../keys/java/kp_rsa4096_emoticon/private_key.json';
+import publicKey4096_emote from '../keys/java/kp_rsa4096_emoticon/public_key.json';
+import privateKey4096_umlaut from '../keys/java/kp_rsa4096_umlaut/private_key.json';
+import publicKey4096_umlaut from '../keys/java/kp_rsa4096_umlaut/public_key.json';
+
 const userPassword2048: string = 'Qwer1234!';
 const userPassword4096: string = 'Qwer1234!';
 const userPassword4096_2: string = 'Qwer1234!';
+const userPassword4096_umlaut: string = 'Qwer1234!ä';
+const userPassword4096_emote: string = 'Qwer1234!ä🐛';
 
 const encryptedFileContentsB64: string = 'iZoZFAZekI+xyaI6Kirb/6PfGvjH0Gi5EPA5XU49OFt9wqdDsISEtvSKQ6ISgOZ+mso=';
 const plainFileContentsB64: string = 'VGVzdEFCQ0RFRkdIIDEyMwpUZXN0SUpLTE1OT1AgNDU2ClRlc3RRUlNUVVZXWCA3ODk=';
@@ -61,6 +69,40 @@ describe('Cross Crypto SDK tests (Java)', () => {
                 const plainUserKeyPairContainer: PlainUserKeyPairContainer = await Crypto.decryptPrivateKeyAsync(
                     userKeyPairContainer,
                     userPassword4096
+                );
+
+                expect(plainUserKeyPairContainer.privateKeyContainer.version).toBe(UserKeyPairVersion.RSA4096);
+                expect(plainUserKeyPairContainer.privateKeyContainer.privateKey).toContain('-----BEGIN RSA PRIVATE KEY-----');
+                expect(plainUserKeyPairContainer.privateKeyContainer.privateKey).toContain('-----END RSA PRIVATE KEY-----');
+            });
+        });
+        describe('with version RSA-4096 and umlaut in password', () => {
+            test('should return a PlainUserKeyPairContainer in correct format', async () => {
+                const userKeyPairContainer: UserKeyPairContainer = {
+                    privateKeyContainer: privateKey4096_umlaut as PrivateKeyContainer,
+                    publicKeyContainer: publicKey4096_umlaut as PublicKeyContainer
+                };
+
+                const plainUserKeyPairContainer: PlainUserKeyPairContainer = await Crypto.decryptPrivateKeyAsync(
+                    userKeyPairContainer,
+                    userPassword4096_umlaut
+                );
+
+                expect(plainUserKeyPairContainer.privateKeyContainer.version).toBe(UserKeyPairVersion.RSA4096);
+                expect(plainUserKeyPairContainer.privateKeyContainer.privateKey).toContain('-----BEGIN RSA PRIVATE KEY-----');
+                expect(plainUserKeyPairContainer.privateKeyContainer.privateKey).toContain('-----END RSA PRIVATE KEY-----');
+            });
+        });
+        describe('with new version RSA-4096(2) (SHA-1, count=1.3e6) and emoticon in password', () => {
+            test('should return a PlainUserKeyPairContainer in correct format', async () => {
+                const userKeyPairContainer: UserKeyPairContainer = {
+                    privateKeyContainer: privateKey4096_emote as PrivateKeyContainer,
+                    publicKeyContainer: publicKey4096_emote as PublicKeyContainer
+                };
+
+                const plainUserKeyPairContainer: PlainUserKeyPairContainer = await Crypto.decryptPrivateKeyAsync(
+                    userKeyPairContainer,
+                    userPassword4096_emote
                 );
 
                 expect(plainUserKeyPairContainer.privateKeyContainer.version).toBe(UserKeyPairVersion.RSA4096);
@@ -120,9 +162,7 @@ describe('Cross Crypto SDK tests (Java)', () => {
                 expect(plainUserKeyPairContainer.privateKeyContainer.privateKey).toContain('-----BEGIN RSA PRIVATE KEY-----');
                 expect(plainUserKeyPairContainer.privateKeyContainer.privateKey).toContain('-----END RSA PRIVATE KEY-----');
             });
-        });
-        describe('with new version RSA-4096(2) (SHA-1, count=1.3e6)', () => {
-            test('should return a PlainUserKeyPairContainer in correct format', () => {
+            test('should return a PlainUserKeyPairContainer in correct format eventough an umlaut is in the password', () => {
                 const userKeyPairContainer: UserKeyPairContainer = {
                     privateKeyContainer: privateKey4096_2 as PrivateKeyContainer,
                     publicKeyContainer: publicKey4096_2 as PublicKeyContainer
@@ -136,6 +176,30 @@ describe('Cross Crypto SDK tests (Java)', () => {
                 expect(plainUserKeyPairContainer.privateKeyContainer.version).toBe(UserKeyPairVersion.RSA4096);
                 expect(plainUserKeyPairContainer.privateKeyContainer.privateKey).toContain('-----BEGIN RSA PRIVATE KEY-----');
                 expect(plainUserKeyPairContainer.privateKeyContainer.privateKey).toContain('-----END RSA PRIVATE KEY-----');
+            });
+        });
+        describe('with new version RSA-4096(2) (SHA-1, count=1.3e6) and emoticon in password', () => {
+            test('should return a PlainUserKeyPairContainer in correct format', () => {
+                const userKeyPairContainer: UserKeyPairContainer = {
+                    privateKeyContainer: privateKey4096_umlaut as PrivateKeyContainer,
+                    publicKeyContainer: publicKey4096_umlaut as PublicKeyContainer
+                };
+
+                const plainUserKeyPairContainer: PlainUserKeyPairContainer = Crypto.decryptPrivateKey(
+                    userKeyPairContainer,
+                    userPassword4096_umlaut
+                );
+
+                expect(plainUserKeyPairContainer.privateKeyContainer.version).toBe(UserKeyPairVersion.RSA4096);
+                expect(plainUserKeyPairContainer.privateKeyContainer.privateKey).toContain('-----BEGIN RSA PRIVATE KEY-----');
+                expect(plainUserKeyPairContainer.privateKeyContainer.privateKey).toContain('-----END RSA PRIVATE KEY-----');
+            });
+            test('should throw an error when a password with a special character is tried to be decrypted', () => {
+                const userKeyPairContainer: UserKeyPairContainer = {
+                    privateKeyContainer: privateKey4096_emote as PrivateKeyContainer,
+                    publicKeyContainer: publicKey4096_emote as PublicKeyContainer
+                };
+                expect(() => Crypto.decryptPrivateKey(userKeyPairContainer, userPassword4096_emote)).toThrow(DecryptionError);
             });
         });
     });

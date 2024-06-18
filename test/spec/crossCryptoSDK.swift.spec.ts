@@ -1,11 +1,11 @@
 import base64 from 'base64-js';
-import { Crypto } from '../../src/index.node';
 import { EncryptedDataContainer } from '../../src/EncryptedDataContainer';
 import { FileDecryptionCipher } from '../../src/FileDecryptionCipher';
 import { FileEncryptionCipher } from '../../src/FileEncryptionCipher';
 import { PlainDataContainer } from '../../src/PlainDataContainer';
 import { PlainFileKeyVersion } from '../../src/enums/PlainFileKeyVersion';
 import { UserKeyPairVersion } from '../../src/enums/UserKeyPairVersion';
+import { Crypto, DecryptionError } from '../../src/index.node';
 import { FileKey } from '../../src/models/FileKey';
 import { PlainFileKey } from '../../src/models/PlainFileKey';
 import { PlainUserKeyPairContainer } from '../../src/models/PlainUserKeyPairContainer';
@@ -24,10 +24,13 @@ import privateKey4096 from '../keys/swift/kp_rsa4096/private_key.json';
 import publicKey4096 from '../keys/swift/kp_rsa4096/public_key.json';
 import privateKey4096_2 from '../keys/swift/kp_rsa4096_2/private_key.json';
 import publicKey4096_2 from '../keys/swift/kp_rsa4096_2/public_key.json';
+import privateKey4096_special from '../keys/swift/kp_rsa4096_special/private_key.json';
+import publicKey4096_special from '../keys/swift/kp_rsa4096_special/public_key.json';
 
 const userPassword2048: string = 'Pass1234!';
 const userPassword4096: string = 'ABC123DEFF456';
 const userPassword4096_2: string = 'ABC123DEFF456';
+const userPassword4096_3: string = 'Qwer1234!ä🐛';
 
 const encryptedFileContentsB64: string = 'MKZ4+xwwNYK4s2rNhJ8aMdr8RbuMg1z3RsGLnpRk5yHcUg==';
 const plainFileContentsB64: string = 'QWxsIHlvdXIgYmFzZSBhcmUgYmVsb25nIHRvIHVzISEhIQ==';
@@ -78,6 +81,23 @@ describe('Cross Crypto SDK tests (Swift)', () => {
                 const plainUserKeyPairContainer: PlainUserKeyPairContainer = await Crypto.decryptPrivateKeyAsync(
                     userKeyPairContainer,
                     userPassword4096_2
+                );
+
+                expect(plainUserKeyPairContainer.privateKeyContainer.version).toBe(UserKeyPairVersion.RSA4096);
+                expect(plainUserKeyPairContainer.privateKeyContainer.privateKey).toContain('-----BEGIN RSA PRIVATE KEY-----');
+                expect(plainUserKeyPairContainer.privateKeyContainer.privateKey).toContain('-----END RSA PRIVATE KEY-----');
+            });
+        });
+        describe('with new version RSA-4096(2) (SHA-1, count=1.3e6) and special characters in password', () => {
+            test('should return a PlainUserKeyPairContainer in correct format', async () => {
+                const userKeyPairContainer: UserKeyPairContainer = {
+                    privateKeyContainer: privateKey4096_special as PrivateKeyContainer,
+                    publicKeyContainer: publicKey4096_special as PublicKeyContainer
+                };
+
+                const plainUserKeyPairContainer: PlainUserKeyPairContainer = await Crypto.decryptPrivateKeyAsync(
+                    userKeyPairContainer,
+                    userPassword4096_3
                 );
 
                 expect(plainUserKeyPairContainer.privateKeyContainer.version).toBe(UserKeyPairVersion.RSA4096);
@@ -178,6 +198,16 @@ describe('Cross Crypto SDK tests (Swift)', () => {
                 expect(decryptedFileKey.key).toBe(plainFileKey.key);
                 expect(decryptedFileKey.iv).toBe(plainFileKey.iv);
                 expect(decryptedFileKey.tag).toBe(plainFileKey.tag);
+            });
+        });
+        describe('with new version RSA-4096(2) (SHA-1, count=1.3e6) and emoticon in password', () => {
+            test('should throw an error when a password with a special character is tried to be decrypted', () => {
+                const userKeyPairContainer: UserKeyPairContainer = {
+                    privateKeyContainer: privateKey4096_special as PrivateKeyContainer,
+                    publicKeyContainer: publicKey4096_special as PublicKeyContainer
+                };
+
+                expect(() => Crypto.decryptPrivateKey(userKeyPairContainer, userPassword4096_3)).toThrow(DecryptionError);
             });
         });
     });

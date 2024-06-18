@@ -10,10 +10,10 @@ import privateKey4096 from '../keys/javascript/kp_rsa4096/private_key.json';
 import publicKey4096 from '../keys/javascript/kp_rsa4096/public_key.json';
 
 //import keyPairs with Umlaute
-import keypair_2048_old from '../keys/javascript/kp_rsa2048_old/kp_rsa2048_old.json';
 import keypair_2048_new from '../keys/javascript/kp_rsa2048_new/kp_rsa2048_new.json';
-import keypair_4096_old from '../keys/javascript/kp_rsa4096_old/kp_rsa4096_old.json';
+import keypair_2048_old from '../keys/javascript/kp_rsa2048_old/kp_rsa2048_old.json';
 import keypair_4096_new from '../keys/javascript/kp_rsa4096_new/kp_rsa4096_new.json';
+import keypair_4096_old from '../keys/javascript/kp_rsa4096_old/kp_rsa4096_old.json';
 
 // Javascript crypto sdk keys (corrupted)
 import privateKeyBadKey from '../keys/corrupted/private_key_bad_key.json';
@@ -92,6 +92,15 @@ describe('Function: Crypto.checkUserKeyPair', () => {
             );
 
             expect(result).toBe(true);
+        });
+        test('should return false, if password contains special characters like emoticons', () => {
+            testContext.password = 'Qwer1234!ä🐛';
+            const result = Crypto.checkUserKeyPair(
+                keypair_4096_old.encryptedUserKeyPairContainer as UserKeyPairContainer,
+                testContext.password
+            );
+
+            expect(result).toBe(false);
         });
         test('should return false, as the used cryptolib cannot decrypt newly created Key Pairs', () => {
             testContext.password = 'Qwer1234!äö';
