@@ -1,3 +1,4 @@
+import { InvalidCharacterError } from '../../src/error/models/InvalidCharacterError';
 import { Utils } from '../../src/internal/privateKeyAsync/utils';
 
 describe('Class: Utils', () => {
@@ -27,13 +28,21 @@ describe('Class: Utils', () => {
                     password: 'SomePassword!ä',
                     expected: new Uint8Array([83, 111, 109, 101, 80, 97, 115, 115, 119, 111, 114, 100, 33, 228])
                 },
+                { password: '©', expected: new Uint8Array([169]) }
+            ])(
+                'should convert $password to the correct byteArray $expected if the characters are inside the ISO-8859-1 Range',
+                ({ password, expected }) => {
+                    expect(Utils.encodeISO(password)).toEqual(expected);
+                }
+            );
+
+            test.each([
                 { password: '🇩🇪', expected: new Uint8Array([63, 63]) },
                 { password: '🇩', expected: new Uint8Array([63]) },
                 { password: '🚕🚀', expected: new Uint8Array([63, 63]) },
-                { password: '😡#@äfjiFUbFdN🚨', expected: new Uint8Array([63, 35, 64, 228, 102, 106, 105, 70, 85, 98, 70, 100, 78, 63]) },
-                { password: '©', expected: new Uint8Array([169]) }
-            ])('should convert $password to the correct byteArray $expected', ({ password, expected }) => {
-                expect(Utils.encodeISO(password)).toEqual(expected);
+                { password: '😡#@äfjiFUbFdN🚨', expected: new Uint8Array([63, 35, 64, 228, 102, 106, 105, 70, 85, 98, 70, 100, 78, 63]) }
+            ])('should throw an InvalidCharacterError, if the characters are outside of the ISO-8859-1 Range', ({ password, expected }) => {
+                expect(() => Utils.encodeISO(password)).toThrow(InvalidCharacterError);
             });
         });
     });
