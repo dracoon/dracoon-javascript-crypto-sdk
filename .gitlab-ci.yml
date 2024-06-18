@@ -15,6 +15,12 @@ variables:
   ENABLE_PUBLIC_ARTIFACT_PUBLISHING: 'true'
   ENABLE_CONTAINER_IMAGES: 'false'
 
+# Global defaults, set on every job that doesn't override
+default:
+  id_tokens:
+    ID_TOKEN:
+      aud: https://vault.dracoon.net
+
 integration-test-service:
   stage: test
   script:
