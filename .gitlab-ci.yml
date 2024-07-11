@@ -1,7 +1,7 @@
 include:
-  - project: 'dracoon/cicd/pipeline/pipeline-commons'
+  - project: 'dracoon/cicd/pipeline/web-guild-ci'
     file: 'pipeline-commons.yml'
-    ref: '2.5.4'
+    ref: '2.9.1'
 
 # --- GLOBAL SETTINGS / VARIABLES ---------------------------------------------
 
@@ -14,6 +14,7 @@ variables:
   ENABLE_ARTIFACT_PUBLISHING: 'true'
   ENABLE_PUBLIC_ARTIFACT_PUBLISHING: 'true'
   ENABLE_CONTAINER_IMAGES: 'false'
+  ENABLE_CONTAINER_SCANNING: 'false'
 
 # Global defaults, set on every job that doesn't override
 default:
@@ -43,7 +44,7 @@ build-service:
       - if: $PIPELINE_TRIGGER == "branch" &&
             $PIPELINE_CONTEXT =~ /^(release|snapshot)$/
       # other branch should be optional manual
-      - if: ($PIPELINE_TRIGGER == "mr" &&
+      - if: ($PIPELINE_TRIGGER == "mr" || $PIPELINE_TRIGGER == "branch" &&
             $PIPELINE_CONTEXT != "renovate") ||
             $PIPELINE_CONTEXT == "default"
         when: manual
