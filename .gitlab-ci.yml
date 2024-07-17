@@ -1,7 +1,7 @@
 include:
   - project: 'dracoon/cicd/pipeline/web-guild-ci'
     file: 'pipeline-commons.yml'
-    ref: '2.9.1'
+    ref: '3.0.0'
 
 # --- GLOBAL SETTINGS / VARIABLES ---------------------------------------------
 
