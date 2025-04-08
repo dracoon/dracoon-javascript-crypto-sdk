@@ -1,44 +1,35 @@
 include:
   - project: 'dracoon/cicd/pipeline/web-guild-ci'
-    file: 'pipeline-commons.yml'
-    ref: '3.0.3'
+    ref: "4.0.5"
+    file:
+      - "base.yml"
+      # prepare
+      - "prepare.yml"
+      # build
+      - "build-service.yml"
+      # test
+      - "test-service.yml"
+      - "lint-service.yml"
+      - "dependency-scanning-service.yml"
+      - "secret-detection-service.yml"
+      - "sonar-service.yml"
 
 # --- GLOBAL SETTINGS / VARIABLES ---------------------------------------------
 
 variables:
   NAME: dracoon-sdk-crypto-javascript
-  JIRA_PROJECT_ID: SDKCRYPTJS
+  # https://gitlab.com/gitlab-org/gitlab/-/issues/525496
+  DS_MAJOR_VERSION: 5.8.7
 
   NODE_VERSION: 20.11.1
 
   ENABLE_ARTIFACT_PUBLISHING: 'true'
   ENABLE_PUBLIC_ARTIFACT_PUBLISHING: 'true'
-  ENABLE_CONTAINER_IMAGES: 'false'
-  ENABLE_CONTAINER_SCANNING: 'false'
+  ENABLE_INTEGRATION_TESTING: 'true'
 
-# Global defaults, set on every job that doesn't override
-default:
-  id_tokens:
-    ID_TOKEN:
-      aud: https://vault.dracoon.net
-
-integration-test-service:
-  stage: test
-  script:
-    - npm run integration-test:ci
+  SECRET_DETECTION_EXCLUDED_PATHS: "test"
 
 build-service:
   artifacts:
     paths:
       - lib/
-
-.dev-workflow:
-  job-rules:
-    publish-service:
-      # release branch should be automatic
-      - if: $PIPELINE_TRIGGER == "branch" &&
-            $PIPELINE_CONTEXT =~ /^(release|snapshot)$/
-        when: always
-      # other branch should be optional manual
-      - when: manual
-        allow_failure: true
