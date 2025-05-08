@@ -21,7 +21,7 @@ variables:
   # https://gitlab.com/gitlab-org/gitlab/-/issues/525496
   DS_MAJOR_VERSION: 5.8.7
 
-  NODE_VERSION: 20.11.1
+  NODE_VERSION: 22.15.0
 
   ENABLE_ARTIFACT_PUBLISHING: 'true'
   ENABLE_PUBLIC_ARTIFACT_PUBLISHING: 'true'
