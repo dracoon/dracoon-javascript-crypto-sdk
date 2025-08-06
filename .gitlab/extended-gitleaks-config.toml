@@ -1,0 +1,10 @@
+[extend]
+# Extends default packaged ruleset, NOTE: do not change the path.
+path = "/gitleaks.toml"
+
+[allowlist]
+description = "Ignore .git/config"
+paths = [
+  ".git/config"
+]
+
