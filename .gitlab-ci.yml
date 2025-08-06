@@ -1,6 +1,6 @@
 include:
   - project: 'dracoon/cicd/pipeline/web-guild-ci'
-    ref: "4.0.5"
+    ref: "4.0.7"
     file:
       - "base.yml"
       # prepare
