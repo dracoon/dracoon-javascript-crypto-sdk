@@ -33,7 +33,9 @@ describe('Function: Crypto.encryptFileKey', () => {
             testContext.publicKeyContainer = publicKey2048 as PublicKeyContainer;
         });
         test('should throw an InvalidArgumentError, if filekey is falsy', () => {
-            expect(() => Crypto.encryptFileKey(null, testContext.publicKeyContainer)).toThrow(InvalidArgumentError);
+            expect(() => Crypto.encryptFileKey(null as unknown as PlainFileKey, testContext.publicKeyContainer)).toThrow(
+                InvalidArgumentError
+            );
         });
         test('should throw an InvalidFileKeyError, if version of filekey is not supported', () => {
             testContext.plainFileKey = plainFileKeyBadVersion as PlainFileKey;
@@ -46,7 +48,9 @@ describe('Function: Crypto.encryptFileKey', () => {
             testContext.plainFileKey = plainFileKey2048 as PlainFileKey;
         });
         test('should throw an InvalidArgumentError, if public key is falsy', () => {
-            expect(() => Crypto.encryptFileKey(testContext.plainFileKey, null)).toThrow(InvalidArgumentError);
+            expect(() => Crypto.encryptFileKey(testContext.plainFileKey, null as unknown as PublicKeyContainer)).toThrow(
+                InvalidArgumentError
+            );
         });
         test('should throw an InvalidKeyPairError, if version of public key is not supported', () => {
             testContext.publicKeyContainer = publicKeyBadVersion as PublicKeyContainer;

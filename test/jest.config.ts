@@ -1,4 +1,5 @@
 import type { Config } from '@jest/types';
+import { createDefaultPreset } from 'ts-jest';
 
 const config: Config.InitialOptions = {
     preset: 'ts-jest',
@@ -9,12 +10,8 @@ const config: Config.InitialOptions = {
     collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
     coverageDirectory: '<rootDir>/coverage',
     coverageReporters: ['lcovonly'],
-    globals: {
-        'ts-jest': {
-            tsconfig: '<rootDir>/test/tsconfig.test.json'
-        }
-    },
-    testTimeout: 60000
+    testTimeout: 60000,
+    ...createDefaultPreset()
 };
 
 export default config;

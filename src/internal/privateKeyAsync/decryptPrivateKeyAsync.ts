@@ -75,7 +75,7 @@ async function decryptPrivateKeyInfo(obj: asn1.Asn1, password: string, cryptoWor
 
     const decryptionParams: DecryptionParams = getDecryptionParams(oid, capture.encryptionParams);
 
-    const encryptedDataView: Uint8Array = Utils.stringAsArrayBuffer(capture.encryptedData);
+    const encryptedDataView: Uint8Array<ArrayBuffer> = Utils.stringAsArrayBuffer(capture.encryptedData);
 
     const decryptedData: ArrayBuffer = await deriveKeyAndDecrypt(
         {
@@ -157,7 +157,7 @@ async function deriveKeyAndDecrypt(parameters: EncryptPrivateKeyParams, cryptoWo
     try {
         const derivedKey: CryptoKey = await deriveKey(parameters, cryptoWorker);
         resolvedArrayBuffer = await getResolverArrayBuffer(parameters, cryptoWorker, derivedKey);
-    } catch (e) {
+    } catch {
         const derivedKey: CryptoKey = await deriveKey(parameters, cryptoWorker, Encoding.ISO8859);
         resolvedArrayBuffer = await getResolverArrayBuffer(parameters, cryptoWorker, derivedKey);
     }

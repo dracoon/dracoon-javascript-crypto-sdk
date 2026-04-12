@@ -49,7 +49,7 @@ export class FileDecryptionCipher {
         this.cipher.update(byteStringBuffer);
 
         const decryptedBytes: string = this.cipher.output.getBytes();
-        const decryptedByteArray: Uint8Array = util.binary.raw.decode(decryptedBytes);
+        const decryptedByteArray: Uint8Array<ArrayBuffer> = util.binary.raw.decode(decryptedBytes) as Uint8Array<ArrayBuffer>;
 
         return new PlainDataContainer(decryptedByteArray);
     }
@@ -69,8 +69,7 @@ export class FileDecryptionCipher {
         }
 
         const decryptedBytes: string = this.cipher.output.getBytes();
-        const decryptedByteArray: Uint8Array = util.binary.raw.decode(decryptedBytes);
-
+        const decryptedByteArray: Uint8Array<ArrayBuffer> = util.binary.raw.decode(decryptedBytes) as Uint8Array<ArrayBuffer>;
         return new PlainDataContainer(decryptedByteArray);
     }
 }

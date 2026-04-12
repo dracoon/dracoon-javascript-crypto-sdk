@@ -36,7 +36,9 @@ describe('Function: Crypto.encryptPrivateKey', () => {
             testContext.password = 'Qwer1234!';
         });
         test('should throw an InvalidArgumentError, if keypair is falsy', () => {
-            expect(() => Crypto.encryptPrivateKey(null, testContext.password)).toThrow(InvalidArgumentError);
+            expect(() => Crypto.encryptPrivateKey(null as unknown as PlainUserKeyPairContainer, testContext.password)).toThrow(
+                InvalidArgumentError
+            );
         });
         test('should throw an InvalidKeyPairError, if versions of keys dont match', () => {
             testContext.plainUserKeyPairContainer = {
@@ -83,7 +85,9 @@ describe('Function: Crypto.encryptPrivateKey', () => {
             };
         });
         test('should throw an InvalidArgumentError, if password is falsy', () => {
-            expect(() => Crypto.encryptPrivateKey(testContext.plainUserKeyPairContainer, null)).toThrow(InvalidArgumentError);
+            expect(() => Crypto.encryptPrivateKey(testContext.plainUserKeyPairContainer, null as unknown as string)).toThrow(
+                InvalidArgumentError
+            );
         });
         test('should throw an InvalidArgumentError, if password is empty string', () => {
             expect(() => Crypto.encryptPrivateKey(testContext.plainUserKeyPairContainer, '')).toThrow(InvalidArgumentError);

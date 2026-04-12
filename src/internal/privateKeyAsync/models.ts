@@ -15,13 +15,13 @@ export type EncryptPrivateKeyConfig = { hashingParams: EncryptPrivateKeyHashingP
 
 export type EncryptPrivateKeyParams = {
     password: string;
-    contentToEncrypt: Uint8Array;
+    contentToEncrypt: Uint8Array<ArrayBuffer>;
     contentEncryptionAlgorithm: EncryptPrivateKeyEncryptionParams;
     hashingParams: EncryptPrivateKeyHashingParams;
 };
 
 export type EncryptPrivateKeyHashingParams = {
-    salt: Uint8Array;
+    salt: Uint8Array<ArrayBuffer>;
     hmacHashAlgorithm: SupportedHashAlgorithm;
     iterationCount: number;
 };
@@ -56,5 +56,5 @@ export type AesCBCKeyGenParams = AesKeyGenParams & {
  */
 export type AesCBCEncryptParams = AesKeyGenParams & {
     name: SupportedCipherType;
-    iv: Uint8Array;
+    iv: Uint8Array<ArrayBuffer>;
 };

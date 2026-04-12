@@ -35,9 +35,9 @@ describe('Roundtrip: Crypto.encryptPrivateKeyAsync -> Crypto.decryptPrivateKeyAs
         { count: 1e4, prf: 'SHA-512', keyLength: 192 },
         { count: 1e4, prf: 'SHA-512', keyLength: 256 }
     ])('should work for prf: $prf, keylength: $keyLength, count: $count', async ({ prf, count, keyLength }) => {
-        const salt: Uint8Array = new Uint8Array(16);
+        const salt: Uint8Array<ArrayBuffer> = new Uint8Array(16);
         crypto.getRandomValues(salt);
-        const iv: Uint8Array = new Uint8Array(16);
+        const iv: Uint8Array<ArrayBuffer> = new Uint8Array(16);
         crypto.getRandomValues(iv);
 
         const encrypted: string = await encryptRsaPrivateKeyAsync(

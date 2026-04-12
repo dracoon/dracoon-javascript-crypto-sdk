@@ -18,7 +18,7 @@ describe('Function: Crypto.createFileEncryptionCipher', () => {
 
     describe('with invalid filekey', () => {
         test('should throw an InvalidArgumentError, if filekey is falsy', () => {
-            expect(() => Crypto.createFileEncryptionCipher(null)).toThrow(InvalidArgumentError);
+            expect(() => Crypto.createFileEncryptionCipher(null as unknown as PlainFileKey)).toThrow(InvalidArgumentError);
         });
         test('should throw an InvalidFileKeyError, if version of filekey is not supported', () => {
             testContext.plainFileKey = plainFileKeyBadVersion as PlainFileKey;

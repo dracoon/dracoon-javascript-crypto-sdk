@@ -31,7 +31,9 @@ describe('Function: Crypto.checkUserKeyPair', () => {
             testContext.password = 'Qwer1234!';
         });
         test('should throw an InvalidArgumentError, if keypair is falsy', () => {
-            expect(() => Crypto.checkUserKeyPair(null, testContext.password)).toThrow(InvalidArgumentError);
+            expect(() => Crypto.checkUserKeyPair(null as unknown as UserKeyPairContainer, testContext.password)).toThrow(
+                InvalidArgumentError
+            );
         });
         test('should throw an InvalidKeyPairError, if versions of keys dont match', () => {
             testContext.userKeyPairContainer = {
@@ -58,7 +60,9 @@ describe('Function: Crypto.checkUserKeyPair', () => {
             };
         });
         test('should throw an InvalidArgumentError, if password is falsy', () => {
-            expect(() => Crypto.checkUserKeyPair(testContext.userKeyPairContainer, null)).toThrow(InvalidArgumentError);
+            expect(() => Crypto.checkUserKeyPair(testContext.userKeyPairContainer, null as unknown as string)).toThrow(
+                InvalidArgumentError
+            );
         });
         test('should throw an InvalidArgumentError, if password is empty string', () => {
             expect(() => Crypto.checkUserKeyPair(testContext.userKeyPairContainer, '')).toThrow(InvalidArgumentError);

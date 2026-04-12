@@ -73,7 +73,7 @@ export async function encryptRsaPrivateKeyAsync(
 ): Promise<string> {
     const { encryptParams: encryptConfig, hashingParams: hashingConfig } = encryptionConfig;
 
-    const contentToEncrypt: Uint8Array = Utils.stringAsArrayBuffer(
+    const contentToEncrypt: Uint8Array<ArrayBuffer> = Utils.stringAsArrayBuffer(
         asn1.toDer(pki.wrapRsaPrivateKey(pki.privateKeyToAsn1(pki.privateKeyFromPem(pem)))).getBytes()
     );
 
@@ -151,7 +151,7 @@ function createPbkdf2Params(
 }
 
 type AlgorithmAsn1 = asn1.Asn1 & { __declared_type__: 'AlgorithmAsn1' };
-function createAlgorithmAsn(params: Pbkdf2ParamsAsn1, encOid: string, iv: Uint8Array): AlgorithmAsn1 {
+function createAlgorithmAsn(params: Pbkdf2ParamsAsn1, encOid: string, iv: Uint8Array<ArrayBuffer>): AlgorithmAsn1 {
     return asn1.create(asn1.Class.UNIVERSAL, asn1.Type.SEQUENCE, true, [
         asn1.create(asn1.Class.UNIVERSAL, asn1.Type.OID, false, asn1.oidToDer(pki.oids['pkcs5PBES2']).getBytes()),
         asn1.create(asn1.Class.UNIVERSAL, asn1.Type.SEQUENCE, true, [

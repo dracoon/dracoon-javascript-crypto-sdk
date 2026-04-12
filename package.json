@@ -1,6 +1,6 @@
 {
     "name": "@dracoon-official/crypto-sdk",
-    "version": "1.12.0",
+    "version": "2.0.0",
     "description": "The official Dracoon Crypto SDK for JavaScript",
     "license": "Apache-2.0",
     "author": "DRACOON",
@@ -20,10 +20,10 @@
         ".": {
             "types": "./lib/index.default.d.ts",
             "node": "./lib/node/cjs/bundle.js",
-            "default": "./lib/browser/cjs/bundle.js"
+            "default": "./lib/browser/es/bundle.mjs"
         }
     },
-    "main": "./lib/browser/cjs/bundle.js",
+    "main": "./lib/browser/es/bundle.mjs",
     "types": "./lib/index.default.d.ts",
     "files": [
         "./lib"
@@ -53,24 +53,25 @@
         "node-forge": "^1.4.0"
     },
     "devDependencies": {
-        "@rollup/plugin-commonjs": "^25.0.8",
-        "@rollup/plugin-node-resolve": "^15.3.1",
+        "@eslint/js": "^9.39.4",
+        "@rollup/plugin-commonjs": "^29.0.2",
+        "@rollup/plugin-node-resolve": "^16.0.3",
         "@types/base64-js": "^1.5.0",
-        "@types/jest": "^28.1.8",
+        "@types/jest": "^30.0.0",
         "@types/node": "^16.18.126",
         "@types/node-forge": "^1.3.14",
-        "@typescript-eslint/eslint-plugin": "^5.62.0",
-        "@typescript-eslint/parser": "^5.62.0",
         "base64-js": "^1.5.1",
-        "eslint": "^8.57.1",
-        "eslint-config-prettier": "^8.10.2",
+        "eslint": "^9.39.4",
+        "eslint-config-prettier": "^10.1.8",
+        "globals": "^17.5.0",
         "husky": "^8.0.3",
-        "jest": "^28.1.3",
-        "prettier": "^2.8.8",
-        "rollup": "^4.60.0",
-        "rollup-plugin-typescript2": "^0.36.0",
-        "ts-jest": "^28.0.0",
+        "jest": "^30.3.0",
+        "prettier": "^3.8.2",
+        "rollup": "^4.60.1",
+        "rollup-plugin-typescript2": "^0.37.0",
+        "ts-jest": "^29.4.9",
         "ts-node": "^10.9.1",
-        "typescript": "~4.8.2"
+        "typescript": "~5.9.3",
+        "typescript-eslint": "^8.58.1"
     }
 }

@@ -46,7 +46,7 @@ export class FileEncryptionCipher {
         this.cipher.update(byteStringBuffer);
 
         const encryptedBytes: string = this.cipher.output.getBytes();
-        const encryptedByteArray: Uint8Array = util.binary.raw.decode(encryptedBytes);
+        const encryptedByteArray: Uint8Array<ArrayBuffer> = util.binary.raw.decode(encryptedBytes) as Uint8Array<ArrayBuffer>;
 
         return new EncryptedDataContainer(encryptedByteArray);
     }
@@ -66,7 +66,7 @@ export class FileEncryptionCipher {
         }
 
         const encryptedBytes: string = this.cipher.output.getBytes();
-        const encryptedByteArray: Uint8Array = util.binary.raw.decode(encryptedBytes);
+        const encryptedByteArray: Uint8Array<ArrayBuffer> = util.binary.raw.decode(encryptedBytes) as Uint8Array<ArrayBuffer>;
 
         const tag: string = this.cipher.mode.tag.getBytes();
         const tagB64: Base64 = util.encode64(tag);

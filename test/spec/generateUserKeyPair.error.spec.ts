@@ -21,7 +21,9 @@ describe('Function: Crypto.generateUserKeyPair', () => {
         });
         test('should throw an InvalidArgumentError, if version is falsy', async () => {
             expect.assertions(1);
-            await expect(() => Crypto.generateUserKeyPair(null, testContext.password)).rejects.toThrow(InvalidArgumentError);
+            await expect(() => Crypto.generateUserKeyPair(null as unknown as UserKeyPairVersion, testContext.password)).rejects.toThrow(
+                InvalidArgumentError
+            );
         });
         test('should throw an InvalidVersionError, if version is not supported', async () => {
             const invalidVersion = 'RSA-1024' as UserKeyPairVersion;
@@ -36,7 +38,9 @@ describe('Function: Crypto.generateUserKeyPair', () => {
         });
         test('should throw an InvalidArgumentError, if password is falsy', async () => {
             expect.assertions(1);
-            await expect(() => Crypto.generateUserKeyPair(testContext.version, null)).rejects.toThrow(InvalidArgumentError);
+            await expect(() => Crypto.generateUserKeyPair(testContext.version, null as unknown as string)).rejects.toThrow(
+                InvalidArgumentError
+            );
         });
         test('should throw an InvalidArgumentError, if password is empty string', async () => {
             expect.assertions(1);

@@ -3,15 +3,15 @@ import { InvalidCharacterError } from '../../error/models/InvalidCharacterError'
 const ISO_MAX_RANGE = 0xff;
 
 export class Utils {
-    public static arrayBufferAsString(buffer: ArrayBuffer): string {
+    public static arrayBufferAsString(buffer: ArrayBuffer | Uint8Array<ArrayBuffer>): string {
         return Array.from(new Uint8Array(buffer), (x) => String.fromCharCode(x)).join('');
     }
 
-    public static stringAsArrayBuffer(str: string): Uint8Array {
+    public static stringAsArrayBuffer(str: string): Uint8Array<ArrayBuffer> {
         return new Uint8Array([...str].map((c) => c.charCodeAt(0)));
     }
 
-    public static encodeISO(password: string): Uint8Array {
+    public static encodeISO(password: string): Uint8Array<ArrayBuffer> {
         const byteArray: number[] = [];
         for (let i = 0; i < password.length; i++) {
             const charCode = password.charCodeAt(i);

@@ -69,7 +69,7 @@ export class Crypto {
         try {
             const plainUserKeyPair = await generatePlainUserKeyPair(version);
             return await encryptPrivateKeyAsync(plainUserKeyPair, password);
-        } catch (error) {
+        } catch {
             throw new GenericCryptoError();
         }
     }
@@ -103,7 +103,7 @@ export class Crypto {
 
         try {
             return encryptPrivateKey(plainUserKeyPairContainer, password);
-        } catch (error) {
+        } catch {
             throw new EncryptionError();
         }
     }
@@ -136,7 +136,7 @@ export class Crypto {
 
         try {
             return await encryptPrivateKeyAsync(plainUserKeyPairContainer, password);
-        } catch (error) {
+        } catch {
             throw new EncryptionError();
         }
     }
@@ -170,7 +170,7 @@ export class Crypto {
 
         try {
             return decryptPrivateKey(userKeyPairContainer, password);
-        } catch (error) {
+        } catch {
             throw new DecryptionError();
         }
     }
@@ -203,7 +203,7 @@ export class Crypto {
 
         try {
             return await decryptPrivateKeyAsync(userKeyPairContainer, password);
-        } catch (error) {
+        } catch {
             throw new DecryptionError();
         }
     }
@@ -237,7 +237,7 @@ export class Crypto {
 
         try {
             return !!decryptPrivateKey(userKeyPairContainer, password);
-        } catch (error) {
+        } catch {
             return false;
         }
     }
@@ -266,7 +266,7 @@ export class Crypto {
 
         try {
             return !!(await decryptPrivateKeyAsync(userKeyPairContainer, password));
-        } catch (error) {
+        } catch {
             return false;
         }
     }
@@ -293,7 +293,7 @@ export class Crypto {
 
         try {
             return generateFileKey(version);
-        } catch (error) {
+        } catch {
             throw new GenericCryptoError();
         }
     }
@@ -401,7 +401,7 @@ export class Crypto {
 
         try {
             return new FileEncryptionCipher(plainFileKey);
-        } catch (error) {
+        } catch {
             throw new GenericCryptoError();
         }
     }
@@ -429,7 +429,7 @@ export class Crypto {
 
         try {
             return new FileDecryptionCipher(plainFileKey);
-        } catch (error) {
+        } catch {
             throw new GenericCryptoError();
         }
     }

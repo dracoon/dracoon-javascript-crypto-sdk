@@ -11,6 +11,8 @@ import { InvalidFileKeyError } from './error/models/InvalidFileKeyError';
 import { InvalidKeyPairError } from './error/models/InvalidKeyPairError';
 import { InvalidVersionError } from './error/models/InvalidVersionError';
 import { VersionMismatchError } from './error/models/VersionMismatchError';
+import { FileDecryptionCipher } from './FileDecryptionCipher';
+import { FileEncryptionCipher } from './FileEncryptionCipher';
 
 export {
     EncryptedDataContainer,
@@ -25,5 +27,7 @@ export {
     InvalidFileKeyError,
     InvalidKeyPairError,
     InvalidVersionError,
-    VersionMismatchError
+    VersionMismatchError,
+    FileDecryptionCipher,
+    FileEncryptionCipher
 };

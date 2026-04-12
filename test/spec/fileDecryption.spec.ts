@@ -32,7 +32,7 @@ describe('File Decryption', () => {
             testContext.fileDecryptionCipher = Crypto.createFileDecryptionCipher(testContext.plainFileKey);
         });
         test('should decrypt a string in a single chunk', async () => {
-            const encryptedByteArray: Uint8Array = base64.toByteArray(encryptedFileContentsB64);
+            const encryptedByteArray: Uint8Array<ArrayBuffer> = base64.toByteArray(encryptedFileContentsB64) as Uint8Array<ArrayBuffer>;
             const encryptedDataContainer: EncryptedDataContainer = new EncryptedDataContainer(encryptedByteArray);
 
             const plainDataContainer1: PlainDataContainer = testContext.fileDecryptionCipher.processBytes(encryptedDataContainer);
@@ -45,8 +45,8 @@ describe('File Decryption', () => {
         });
         test('should decrypt a string in multiple chunks', () => {
             const encryptedByteArray: Uint8Array = base64.toByteArray(encryptedFileContentsB64);
-            const encryptedByteArray1: Uint8Array = encryptedByteArray.slice(0, 22);
-            const encryptedByteArray2: Uint8Array = encryptedByteArray.slice(22, 44);
+            const encryptedByteArray1: Uint8Array<ArrayBuffer> = encryptedByteArray.slice(0, 22);
+            const encryptedByteArray2: Uint8Array<ArrayBuffer> = encryptedByteArray.slice(22, 44);
             const encryptedDataContainer1: EncryptedDataContainer = new EncryptedDataContainer(encryptedByteArray1);
             const encryptedDataContainer2: EncryptedDataContainer = new EncryptedDataContainer(encryptedByteArray2);
 
@@ -71,7 +71,7 @@ describe('File Decryption', () => {
             let someError = null;
 
             try {
-                const encryptedByteArray: Uint8Array = base64.toByteArray(encryptedFileContentsB64);
+                const encryptedByteArray: Uint8Array<ArrayBuffer> = base64.toByteArray(encryptedFileContentsB64) as Uint8Array<ArrayBuffer>;
                 const encryptedDataContainer: EncryptedDataContainer = new EncryptedDataContainer(encryptedByteArray);
 
                 testContext.fileDecryptionCipher.processBytes(encryptedDataContainer);
@@ -88,7 +88,7 @@ describe('File Decryption', () => {
             let someError = null;
 
             try {
-                const encryptedByteArray: Uint8Array = base64.toByteArray(encryptedFileContentsB64);
+                const encryptedByteArray: Uint8Array<ArrayBuffer> = base64.toByteArray(encryptedFileContentsB64) as Uint8Array<ArrayBuffer>;
                 const encryptedDataContainer: EncryptedDataContainer = new EncryptedDataContainer(encryptedByteArray);
 
                 testContext.fileDecryptionCipher.processBytes(encryptedDataContainer);
@@ -105,7 +105,7 @@ describe('File Decryption', () => {
             let someError = null;
 
             try {
-                const encryptedByteArray: Uint8Array = base64.toByteArray(encryptedFileContentsB64);
+                const encryptedByteArray: Uint8Array<ArrayBuffer> = base64.toByteArray(encryptedFileContentsB64) as Uint8Array<ArrayBuffer>;
                 const encryptedDataContainer: EncryptedDataContainer = new EncryptedDataContainer(encryptedByteArray);
 
                 testContext.fileDecryptionCipher.processBytes(encryptedDataContainer);

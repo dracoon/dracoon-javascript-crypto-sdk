@@ -10,7 +10,7 @@ type Context = {
 describe('Function: Crypto.generateFileKey', () => {
     describe('with invalid filekey version', () => {
         test('should throw an InvalidArgumentError, if version is falsy', () => {
-            expect(() => Crypto.generateFileKey(null)).toThrow(InvalidArgumentError);
+            expect(() => Crypto.generateFileKey(null as unknown as PlainFileKeyVersion)).toThrow(InvalidArgumentError);
         });
         test('should throw an InvalidVersionError, if version is not supported', () => {
             expect(() => Crypto.generateFileKey('AES-128-GCM' as PlainFileKeyVersion)).toThrow(InvalidVersionError);

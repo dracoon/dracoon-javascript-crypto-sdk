@@ -250,7 +250,7 @@ describe('Cross Crypto SDK tests (Java)', () => {
             const fileKey: PlainFileKey = { ...plainFileKey2048, version: PlainFileKeyVersion.AES256GCM };
             const fileDecryptionCipher: FileDecryptionCipher = Crypto.createFileDecryptionCipher(fileKey);
 
-            const encryptedByteArray: Uint8Array = base64.toByteArray(encryptedFileContentsB64);
+            const encryptedByteArray: Uint8Array<ArrayBuffer> = base64.toByteArray(encryptedFileContentsB64) as Uint8Array<ArrayBuffer>;
             const encryptedDataContainer: EncryptedDataContainer = new EncryptedDataContainer(encryptedByteArray);
 
             const plainDataContainer1: PlainDataContainer = fileDecryptionCipher.processBytes(encryptedDataContainer);
@@ -267,7 +267,7 @@ describe('Cross Crypto SDK tests (Java)', () => {
             const fileKey: PlainFileKey = { ...plainFileKey2048, version: PlainFileKeyVersion.AES256GCM };
             const fileEncryptionCipher: FileEncryptionCipher = Crypto.createFileEncryptionCipher(fileKey);
 
-            const plainByteArray: Uint8Array = base64.toByteArray(plainFileContentsB64);
+            const plainByteArray: Uint8Array<ArrayBuffer> = base64.toByteArray(plainFileContentsB64) as Uint8Array<ArrayBuffer>;
             const plainDataContainer: PlainDataContainer = new PlainDataContainer(plainByteArray);
 
             const encryptedDataContainer1: EncryptedDataContainer = fileEncryptionCipher.processBytes(plainDataContainer);
