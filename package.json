@@ -46,8 +46,9 @@
         "integration-test:ci:browser": "mkdir -p ${CI_PROJECT_DIR}/integration-tests/pkg && npm pack --pack-destination ${CI_PROJECT_DIR}/integration-tests/pkg && cd ${CI_PROJECT_DIR}/integration-tests/browser && npm run integration-test:ci",
         "integration-test:ci:node": "mkdir -p ${CI_PROJECT_DIR}/integration-tests/pkg && npm pack --pack-destination ${CI_PROJECT_DIR}/integration-tests/pkg && cd ${CI_PROJECT_DIR}/integration-tests/node && npm run integration-test:ci",
         "integration-test:ci": "npm run integration-test:ci:browser && npm run integration-test:ci:node",
-        "lint:ci": "npm run eslint:check",
-        "publish:ci": "npm publish"
+        "lint:ci": "npm run prettier:check && npm run eslint:check",
+        "publish:ci": "npm publish",
+        "prepare": "husky"
     },
     "dependencies": {
         "node-forge": "^1.4.0"
@@ -64,7 +65,7 @@
         "eslint": "^9.39.4",
         "eslint-config-prettier": "^10.1.8",
         "globals": "^17.5.0",
-        "husky": "^8.0.3",
+        "husky": "^9.1.7",
         "jest": "^30.3.0",
         "prettier": "^3.8.2",
         "rollup": "^4.60.1",

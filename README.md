@@ -15,14 +15,14 @@ https://support.dracoon.com/hc/en-us/articles/360000986345
 
 The following Browser versions are officially supported:
 
--   Chrome v89+
--   Edge v89+
--   Firefox v87+
--   Safari v14+
+- Chrome v89+
+- Edge v89+
+- Firefox v87+
+- Safari v14+
 
 The following Node versions are officially supported:
 
--   Node v16+
+- Node v16+
 
 Older Browser/Node versions might still work, but have not been tested.
 
