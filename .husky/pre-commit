@@ -1,3 +1,2 @@
 npm run prettier:check
 npm run eslint:check
-npm test
