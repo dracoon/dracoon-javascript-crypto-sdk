@@ -1,35 +1,25 @@
 include:
   - project: 'dracoon/cicd/pipeline/web-guild-ci'
-    ref: "4.0.8"
+    ref: "4.1.2"
     file:
-      - "base.yml"
-      # prepare
-      - "prepare.yml"
-      # build
-      - "build-service.yml"
-      # test
-      - "test-service.yml"
-      - "lint-service.yml"
-      - "dependency-scanning-service.yml"
-      - "secret-detection-service.yml"
-      - "sonar-service.yml"
+      - build-service.yml
+      - test-service.yml
+      - lint-service.yml
+      - sonar-service.yml
 
 # --- GLOBAL SETTINGS / VARIABLES ---------------------------------------------
 
 variables:
   NAME: dracoon-sdk-crypto-javascript
-  # https://gitlab.com/gitlab-org/gitlab/-/issues/525496
-  DS_MAJOR_VERSION: 5.8.7
-
   NODE_VERSION: 24.14.1
 
-  ENABLE_ARTIFACT_PUBLISHING: 'true'
-  ENABLE_PUBLIC_ARTIFACT_PUBLISHING: 'true'
+  ENABLE_ARTIFACT_PUBLISH: 'true'
+  ENABLE_PUBLIC_ARTIFACT_PUBLISH: 'true'
   ENABLE_INTEGRATION_TESTING: 'true'
 
   SECRET_DETECTION_EXCLUDED_PATHS: "test"
 
-build-service:
+build:
   artifacts:
     paths:
       - lib/
